@@ -1,0 +1,206 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  STAFF
+  STUDENT
+  TEACHER
+}
+
+enum TransactionType {
+  INCOME
+  EXPENSE
+}
+
+enum PaymentStatus {
+  PAID
+  PENDING
+  PARTIAL
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+enum Section {
+  A
+  B
+  C
+  D
+  E
+}
+
+enum Grade {
+  GRADE_1
+  GRADE_2
+  GRADE_3
+  GRADE_4
+  GRADE_5
+  GRADE_6
+  GRADE_7
+  GRADE_8
+  GRADE_9
+  GRADE_10
+  GRADE_11
+  GRADE_12
+}
+
+enum ResultGrade {
+  A_PLUS
+  A
+  B_PLUS
+  B
+  C_PLUS
+  C
+  D
+  FAIL
+}
+
+enum Position {
+  TEACHER
+  PRINCIPAL
+  VICE_PRINCIPAL
+  LIBRARIAN
+  ACCOUNTANT
+  OTHER
+}
+
+model User {
+  id       Int    @id @default(autoincrement())
+  email    String @unique
+  password String
+  role     Role   @default(STUDENT)
+
+  admin    Admin[]
+  staff    Staff[]
+  students Students[]
+}
+
+model Admin {
+  id               Int               @id @default(autoincrement())
+  User             User?             @relation(fields: [userId], references: [id])
+  userId           Int?
+  createdAt        DateTime          @default(now())
+  updateAt         DateTime          @default(now())
+  results          Results[]
+  fees             Fees[]
+  collegeExepenses CollegeExpenses[]
+}
+
+model Staff {
+  id            Int       @id @default(autoincrement())
+  email         String    @unique
+  password      String
+  monthlySalary Float
+  payout        Float
+  pay           Boolean
+  month         DateTime  @default(now())
+  role          Role      @default(TEACHER)
+  position      Position?
+  hiredAt       DateTime  @default(now())
+  resignedAt    DateTime?
+  isActive      Boolean   @default(true)
+  profile       Profile[]
+  results       Results[]
+  fees          Fees[]
+  lastLogin     DateTime?
+  User          User?     @relation(fields: [userId], references: [id])
+  userId        Int?
+  deletedAt     DateTime?
+  Class         Class[]
+}
+
+model Profile {
+  id          Int     @id @default(autoincrement())
+  name        String
+  bio         String?
+  photoUrl    String?
+  position    String?
+  contact     String?
+  address     String?
+  socialLinks Json?
+  Staff       Staff   @relation(fields: [staffId], references: [id])
+  staffId     Int
+}
+
+model Students {
+  id              Int       @id @default(autoincrement())
+  name            String
+  classId         Int?
+  gender          Gender?
+  section         Section?
+  Class           Class?    @relation(fields: [classId], references: [id])
+  dateOfBirth     DateTime?
+  address         String?
+  guardianContact String?
+  guardianName    String?
+  User            User?     @relation(fields: [userId], references: [id])
+  userId          Int?
+  results         Results[]
+  fees            Fees[]
+  deletedAt       DateTime?
+}
+
+model Class {
+  id        Int        @id @default(autoincrement())
+  grade     Grade
+  students  Students[]
+  section   Section?
+  teacherId Int?
+  teacher   Staff?     @relation(fields: [teacherId], references: [id])
+}
+
+model Results {
+  id          Int         @id @default(autoincrement())
+  subject     String
+  grade       ResultGrade
+  obtainMarks Int
+  totalMarks  Int
+
+  Students   Students? @relation(fields: [studentsId], references: [id])
+  studentsId Int?
+  Staff      Staff?    @relation(fields: [staffId], references: [id])
+  staffId    Int?
+  Admin      Admin?    @relation(fields: [adminId], references: [id])
+  adminId    Int?
+}
+
+model Fees {
+  id            Int           @id @default(autoincrement())
+  amount        Int
+  totalAmount   Int
+  paymentStatus PaymentStatus @default(PENDING)
+
+  class      String
+  startMonth DateTime  @default(now())
+  paidDate   DateTime  @default(now())
+  adminId    Int?
+  Admin      Admin?    @relation(fields: [adminId], references: [id])
+  staffId    Int?
+  Staff      Staff?    @relation(fields: [staffId], references: [id])
+  studentsId Int?
+  Students   Students? @relation(fields: [studentsId], references: [id])
+  deletedAt  DateTime?
+}
+
+model CollegeExpenses {
+  id            Int    @id @default(autoincrement())
+  description   String
+  amount        Int
+  transactionId String @default(uuid())
+
+  category        String?
+  transactionType TransactionType
+  date            DateTime        @default(now())
+  Admin           Admin?          @relation(fields: [adminId], references: [id])
+  adminId         Int?
+}
