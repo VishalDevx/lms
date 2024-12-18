@@ -1,69 +1,69 @@
 const express = require("express");
 const adminRoutes = express.Router();
-const { PrismaClient, Gender } = require("@prisma/client");
+const { PrismaClient, Gender, Section } = require("@prisma/client");
 
 const prisma = new PrismaClient();
 
 // Post students Id
+
 adminRoutes.post("/students", async (req, res) => {
   try {
     const {
       name,
-      gender, // Expecting "MALE", "FEMALE", "OTHER"
+      gender,
       section,
-      classId,
       dateOfBirth,
       address,
-      guardianName,
-      guardianContact,
+      gaurdianName,
+      gaurdianContact,
     } = req.body;
-
-    // Convert gender to uppercase to match the enum case
     const genderValue = Gender[gender.toUpperCase()];
-
+    const sectionValue = Section[section.toUpperCase()];
     if (!genderValue) {
-      return res.status(400).json({ msg: "Invalid gender value" });
+      res.status(400).json({
+        msg: "gender is not selected correctly",
+      });
     }
-
+    if (!sectionValue) {
+      res.status(400).json({
+        msg: "You are not give the sections ",
+      });
+    }
     const student = await prisma.students.create({
       data: {
         name,
-        gender: genderValue, // Use the enum value
-        section,
-        classId,
+        gender: genderValue,
+        section: sectionValue,
         dateOfBirth: new Date(dateOfBirth),
         address,
-        guardianName,
-        guardianContact,
+        gaurdianName,
+        gaurdianContact,
       },
     });
-
-    res.status(201).json({
-      msg: "Student added successfully",
-      student,
-    });
+    return res.status(201).json({ msg: "Student added successfully", student });
   } catch (error) {
-    console.error("Error adding student", error);
-    res.status(500).json({
-      msg: "Failed to add student",
+    console.error("Failed to add the student:", error);
+    return res.status(500).json({
+      msg: "An error occurred while adding the student",
       error: error.message,
     });
   }
 });
+
 adminRoutes.get("/students", async (req, res) => {
   try {
-    const students = await prisma.students.findMany(); // Fetch all students
-    res.status(200).json(students); // Send the response
+    const student = await prisma.students.findMany();
+    res.status(200).json(student);
   } catch (error) {
-    console.error("Error fetching students:", error);
-    res.status(500).json({ error: "Unable to fetch students" });
+    console.error("error while fetching the data", error);
+    res.status(500).json({
+      msg: "failed in fetching",
+      error,
+    });
   }
 });
 adminRoutes.get("/students/:id", async (req, res) => {
   const { id } = req.params;
-
-  console.log("req.params:", req.params); // Debugging the incoming request
-  console.log("Received ID:", id);
 
   if (!id || isNaN(Number(id))) {
     console.log("Invalid ID received:", id); // Logs invalid input
@@ -85,6 +85,38 @@ adminRoutes.get("/students/:id", async (req, res) => {
   } catch (error) {
     console.error("Error fetching student:", error);
     res.status(500).json({ error: "Unable to fetch the student" });
+  }
+});
+adminRoutes.delete("/students/:id", async (req, res) => {
+  const { id } = req.params;
+
+  // Validate ID
+  if (!id || isNaN(Number(id))) {
+    console.log("Invalid ID received:", id);
+    return res.status(400).json({
+      msg: "Invalid student ID. Must be a numeric value.",
+    });
+  }
+
+  try {
+    // Delete the student
+    const student = await prisma.students.delete({
+      where: { id: Number(id) },
+    });
+
+    return res.status(200).json({
+      msg: "Student removed successfully.",
+      student,
+    });
+  } catch (error) {
+    // Handle errors
+    if (error.code === "P2025") {
+      // Prisma error for "Record not found"
+      return res.status(404).json({ msg: "Student not found." });
+    }
+
+    console.error("Error deleting student:", error);
+    return res.status(500).json({ error: "Unable to delete the student." });
   }
 });
 
