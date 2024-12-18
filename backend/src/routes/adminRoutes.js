@@ -5,7 +5,7 @@ const { PrismaClient, Gender } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 // Post students Id
-adminRoutes.post("/students/generate_id", async (req, res) => {
+adminRoutes.post("/students", async (req, res) => {
   try {
     const {
       name,
@@ -50,148 +50,41 @@ adminRoutes.post("/students/generate_id", async (req, res) => {
     });
   }
 });
-
-// Other routes...
-adminRoutes.get("/students/total_students", async (req, res) => {
+adminRoutes.get("/students", async (req, res) => {
   try {
-    const totalStudents = await prisma.students.count();
-    res.status(200).json({ totalStudents });
+    const students = await prisma.students.findMany(); // Fetch all students
+    res.status(200).json(students); // Send the response
   } catch (error) {
-    console.error("Error fetching total students", error);
-    res.status(500).json({
-      msg: "Failed to fetch total students",
-      error: error.message,
-    });
+    console.error("Error fetching students:", error);
+    res.status(500).json({ error: "Unable to fetch students" });
   }
 });
+adminRoutes.get("/students/:id", async (req, res) => {
+  const { id } = req.params;
 
-adminRoutes.get("/students/single_students", async (req, res) => {
+  console.log("req.params:", req.params); // Debugging the incoming request
+  console.log("Received ID:", id);
+
+  if (!id || isNaN(Number(id))) {
+    console.log("Invalid ID received:", id); // Logs invalid input
+    return res
+      .status(400)
+      .json({ msg: "Invalid student ID. Must be a numeric value." });
+  }
+
   try {
-    const studentId = req.query.id; // Assuming ID is passed as a query parameter
     const student = await prisma.students.findUnique({
-      where: { id: Number(studentId) },
+      where: { id: Number(id) },
     });
 
-    if (student) {
-      res.status(200).json({ student });
-    } else {
-      res.status(404).json({ msg: "Student not found" });
-    }
-  } catch (error) {
-    console.error("Error fetching student", error);
-    res.status(500).json({
-      msg: "Failed to fetch student",
-      error: error.message,
-    });
-  }
-});
-
-// Post Staff Id
-adminRoutes.post("/staff/generate_id", async (req, res) => {
-  try {
-    const {
-      name,
-      gender, // Expecting "MALE", "FEMALE", "OTHER"
-      section,
-      classId,
-      dateOfBirth,
-      address,
-      guardianName,
-      guardianContact,
-    } = req.body;
-
-    // Convert gender to uppercase to match the enum case
-    const genderValue = Gender[gender.toUpperCase()];
-
-    if (!genderValue) {
-      return res.status(400).json({ msg: "Invalid gender value" });
+    if (!student) {
+      return res.status(404).json({ msg: "Student not found" });
     }
 
-    const staff = await prisma.staff.create({
-      data: {
-        name,
-        gender: genderValue, // Use the enum value
-        section,
-        classId,
-        dateOfBirth: new Date(dateOfBirth),
-        address,
-        guardianName,
-        guardianContact,
-      },
-    });
-
-    res.status(201).json({
-      msg: "Staff added successfully",
-      staff,
-    });
+    res.status(200).json(student);
   } catch (error) {
-    console.error("Error adding staff", error);
-    res.status(500).json({
-      msg: "Failed to add staff",
-      error: error.message,
-    });
-  }
-});
-
-// Get staff Profile
-adminRoutes.get("/staff/staff_name", async (req, res) => {
-  try {
-    const staffId = req.query.id; // Assuming ID is passed as a query parameter
-    const staff = await prisma.staff.findUnique({
-      where: { id: Number(staffId) },
-    });
-
-    if (staff) {
-      res.status(200).json({ staff });
-    } else {
-      res.status(404).json({ msg: "Staff not found" });
-    }
-  } catch (error) {
-    console.error("Error fetching staff", error);
-    res.status(500).json({
-      msg: "Failed to fetch staff",
-      error: error.message,
-    });
-  }
-});
-
-// Post Expense
-adminRoutes.post("/expense/new", async (req, res) => {
-  try {
-    const { name, amount, date } = req.body;
-
-    const expense = await prisma.expense.create({
-      data: {
-        name,
-        amount,
-        date: new Date(date),
-      },
-    });
-
-    res.status(201).json({
-      msg: "Expense added successfully",
-      expense,
-    });
-  } catch (error) {
-    console.error("Error adding expense", error);
-    res.status(500).json({
-      msg: "Failed to add expense",
-      error: error.message,
-    });
-  }
-});
-
-// Get Expense
-adminRoutes.get("/expense/get", async (req, res) => {
-  try {
-    const expenses = await prisma.expense.findMany();
-    res.status(200).json({ expenses });
-  } catch (error) {
-    console.error("Error fetching expenses", error);
-    res.status(500).json({
-      msg: "Failed to fetch expenses",
-      error: error.message,
-    });
+    console.error("Error fetching student:", error);
+    res.status(500).json({ error: "Unable to fetch the student" });
   }
 });
 
