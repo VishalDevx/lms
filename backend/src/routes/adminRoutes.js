@@ -1,6 +1,11 @@
 const express = require("express");
 const adminRoutes = express.Router();
-const { PrismaClient, Gender, Section } = require("@prisma/client");
+const {
+  PrismaClient,
+  Gender,
+  Section,
+  PaymentStatus,
+} = require("@prisma/client");
 
 const prisma = new PrismaClient();
 
@@ -49,7 +54,6 @@ adminRoutes.post("/students", async (req, res) => {
     });
   }
 });
-
 adminRoutes.get("/students", async (req, res) => {
   try {
     const student = await prisma.students.findMany();
@@ -117,6 +121,54 @@ adminRoutes.delete("/students/:id", async (req, res) => {
 
     console.error("Error deleting student:", error);
     return res.status(500).json({ error: "Unable to delete the student." });
+  }
+});
+
+adminRoutes.post("/students/:id/fees", async (req, res) => {
+  const { id } = req.params;
+
+  if (!id || isNaN(Number(id))) {
+    return res
+      .status(400)
+      .json({ msg: "Invalid student ID. Must be a numeric value." });
+  }
+  const { amount, totalAmount, paymentStatus, startMonth, paidDate } = req.body;
+
+  try {
+    // Check if student exists
+    const student = await prisma.students.findUnique({
+      where: { id: Number(id) },
+    });
+
+    if (!student) {
+      return res.status(404).json({ msg: "Student not found." });
+    }
+    const statusValues = PaymentStatus[paymentStatus.toUpperCase()];
+    // Validate paymentStatus
+    if (!statusValues) {
+      return res.status(400).json({ msg: "Invalid payment status." });
+    }
+
+    // Create fee
+    const fee = await prisma.fees.create({
+      data: {
+        class: String(),
+        amount: Number(amount),
+
+        totalAmount: Number(totalAmount),
+        paymentStatus: statusValues,
+        startMonth: new Date(startMonth),
+        paidDate: paidDate ? new Date(paidDate) : null,
+        Students: {
+          connect: { id: Number(id) },
+        },
+      },
+    });
+
+    res.status(201).json({ msg: "Fee created successfully.", fee });
+  } catch (error) {
+    console.error("Error adding fee:", error);
+    res.status(500).json({ error: "Unable to create fee." });
   }
 });
 

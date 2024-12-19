@@ -178,17 +178,16 @@ model Fees {
   amount        Int
   totalAmount   Int
   paymentStatus PaymentStatus @default(PENDING)
-
-  class      String
-  startMonth DateTime  @default(now())
-  paidDate   DateTime  @default(now())
-  adminId    Int?
-  Admin      Admin?    @relation(fields: [adminId], references: [id])
-  staffId    Int?
-  Staff      Staff?    @relation(fields: [staffId], references: [id])
-  studentsId Int?
-  Students   Students? @relation(fields: [studentsId], references: [id])
-  deletedAt  DateTime?
+  class         String
+  startMonth    DateTime      @default(now())
+  paidDate      DateTime      @default(now())
+  adminId       Int?
+  Admin         Admin?        @relation(fields: [adminId], references: [id])
+  staffId       Int?
+  Staff         Staff?        @relation(fields: [staffId], references: [id])
+  studentsId    Int?
+  Students      Students?     @relation(fields: [studentsId], references: [id])
+  deletedAt     DateTime?
 }
 
 model CollegeExpenses {
