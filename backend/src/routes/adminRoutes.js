@@ -171,5 +171,25 @@ adminRoutes.post("/students/:id/fees", async (req, res) => {
     res.status(500).json({ error: "Unable to create fee." });
   }
 });
+// adminRoutes.get("/students/:id/fees", async (req, res) => {
+//   const { id } = req.params;
+
+//   try {
+//     const fees = await prisma.fees.findMany({
+//       where: { id: Number(id) },
+//     });
+//     res.status(201).json(fees);
+//     if (!fees.length) {
+//       res.status(400).json({
+//         msg: " No fees found for the students",
+//       });
+//     }
+//   } catch (error) {
+//     console.error("Error fetching fees", error);
+//     res.status(500).json({
+//       error: " unble to fetch the fee",
+//     });
+//   }
+// });
 
 module.exports = adminRoutes;

@@ -185,7 +185,7 @@ model Fees {
   Admin         Admin?        @relation(fields: [adminId], references: [id])
   staffId       Int?
   Staff         Staff?        @relation(fields: [staffId], references: [id])
-  studentsId    Int?
+  studentsId    Int
   Students      Students?     @relation(fields: [studentsId], references: [id])
   deletedAt     DateTime?
 }
