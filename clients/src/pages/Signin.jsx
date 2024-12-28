@@ -1,7 +1,16 @@
 import React from "react";
-
-const Signin = () => {
-  return <div></div>;
+import Header from "../components/Header";
+const SigninPage = () => {
+  return (
+    <div>
+      <Header
+        heading={"login to your account"}
+        paragraph={"Don't Have account yet"}
+        linkName="Signup"
+        linkUrl="/signup"
+      />
+    </div>
+  );
 };
 
-export default Signin;
+export default SigninPage;
