@@ -3,10 +3,12 @@
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
-  "scripts": {
-    "start": "node server.js",
-    "build": "tsc"
-  },
+"scripts": {
+  "dev": "nodemon --watch src --exec ts-node src/server.ts",
+  "build": "tsc",
+  "start": "node dist/server.js"
+}
+,
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -16,6 +18,7 @@
     "typescript": "^5.7.3"
   },
   "dependencies": {
-    "express": "^4.21.2"
+    "express": "^4.21.2",
+    "nodemon": "^3.1.9"
   }
 }
