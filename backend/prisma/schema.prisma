@@ -26,6 +26,9 @@ model Admin {
   lastLogin    DateTime?
 
   //Relations
+  fees     Fee[]
+  students Students[]
+  staff    Staff[]
 }
 
 model Staff {
@@ -36,4 +39,59 @@ model Staff {
   role        String
   phoneNumber String?
   salary      Float
+  Admin       Admin?  @relation(fields: [adminId], references: [id])
+  adminId     String?
+}
+
+model Students {
+  adharNumber  String   @id @default(uuid())
+  fullName     String
+  class        String
+  phoneNumber  String?
+  fatherName   String?
+  motherName   String?
+  profileImage String?
+  dob          DateTime
+  address      String
+  bloodGroup   String?
+  fees         Fee[]
+  Admin        Admin?   @relation(fields: [adminId], references: [id])
+  adminId      String?
+}
+
+model FeeStructure {
+  id          Int     @id @default(autoincrement())
+  feeType     String
+  amout       Float
+  grade       String?
+  description String?
+  fees        Fee[]
+}
+
+model Fee {
+  id                  Int           @id @default(autoincrement())
+  dueDate             DateTime
+  amoutDue            Float
+  amoutPaid           Float         @default(0.0)
+  paymentDate         DateTime?
+  paymentStatus       String        @default("Pending")
+  lateFee             Float         @default(0.0)
+  outstandingBalance  Float         @default(0.0)
+  payments            Payment[]
+  FeeStructure        FeeStructure? @relation(fields: [feeStructureId], references: [id])
+  feeStructureId      Int?
+  Students            Students?     @relation(fields: [studentsAdharNumber], references: [adharNumber])
+  studentsAdharNumber String?
+  Admin               Admin?        @relation(fields: [adminId], references: [id])
+  adminId             String?
+}
+
+model Payment {
+  id            Int      @id @default(autoincrement())
+  paymentDate   DateTime
+  paymentMethod String
+  amoutPaid     Float
+  receiptNumber String   @unique
+  Fee           Fee?     @relation(fields: [feeId], references: [id])
+  feeId         Int?
 }
