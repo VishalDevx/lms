@@ -1,24 +1,31 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
-interface authRequest extends Request {
-  user?: { id: string; role: string };
-}
 
-export const authMiddleware = (
-  req: authRequest,
+const secret: string = process.env.JWT_SECRET || "";
+export const authenticate = (
+  req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const token = req.header("Authorization")?.split("")[1];
-
+  const token = req.header("Authorization")?.split(" ")[1];
   if (!token) {
-    return res.status(401).json({ mas: "No Token Authorization Denied" });
+    res.status(401).json({ msg: "Token is not Provided" });
+    return;
   }
   try {
-    const decode = jwt.verify(token, process.env.JWT_SECRET as string);
-    req.user = decode as { id: string; role: string };
+    const decoded = jwt.verify(token, secret!);
+    (req as any).admin = decoded;
     next();
   } catch (error) {
-    return res.status(401).json({ msg: "Invalid Token" });
+    res.status(500).json({ msg: " Ivalide token" });
   }
 };
+
+export const authorize =
+  (roles: string[]) => (req: Request, res: Response, next: NextFunction) => {
+    const user = (req as any).user;
+    if (!roles.includes(user.role)) {
+      return res.status(403).json({ message: "Access forbidden" });
+    }
+    next();
+  };
