@@ -1,31 +1,31 @@
+import { error } from "console";
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 
 const secret: string = process.env.JWT_SECRET || "";
-export const authenticate = (
+
+if (!secret) {
+  throw new Error("JWT_SECRET environment is not defined ");
+}
+
+export const authenicate = async (
   req: Request,
   res: Response,
   next: NextFunction
-) => {
-  const token = req.header("Authorization")?.split(" ")[1];
+): Promise<void> => {
+  const token = req.header("Authorization")?.split("")[1];
   if (!token) {
-    res.status(401).json({ msg: "Token is not Provided" });
-    return;
+    return res.status(404).json({
+      msg: " token is not provided",
+    });
   }
   try {
-    const decoded = jwt.verify(token, secret!);
+    const decoded = jwt.verify(token, secret);
     (req as any).admin = decoded;
     next();
   } catch (error) {
-    res.status(500).json({ msg: " Ivalide token" });
+    res.status(404).json({
+      msg: "Invalide Token or Expired token",
+    });
   }
 };
-
-export const authorize =
-  (roles: string[]) => (req: Request, res: Response, next: NextFunction) => {
-    const user = (req as any).user;
-    if (!roles.includes(user.role)) {
-      return res.status(403).json({ message: "Access forbidden" });
-    }
-    next();
-  };
