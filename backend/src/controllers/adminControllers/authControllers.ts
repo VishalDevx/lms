@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import prisma from "../config/db"; // Prisma client instance
+import prisma from "../../config/db"; // Prisma client instance
 import { Role } from "@prisma/client";
 import { error } from "console";
 // Login and Verifications
