@@ -1,31 +1,25 @@
-import { error } from "console";
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 
 const secret: string = process.env.JWT_SECRET || "";
 
 if (!secret) {
-  throw new Error("JWT_SECRET environment is not defined ");
+  throw new Error("JWT_SECRET environment variable is not defined.");
 }
-
-export const authenicate = async (
+export const authenticate = async (
   req: Request,
   res: Response,
   next: NextFunction
-): Promise<void> => {
-  const token = req.header("Authorization")?.split("")[1];
+): Promise<any> => {
+  const token = req.header("Authorization")?.split(" ")[1];
   if (!token) {
-    return res.status(404).json({
-      msg: " token is not provided",
-    });
+    return res.status(401).json({ msg: "Token is not provided" });
   }
   try {
     const decoded = jwt.verify(token, secret);
-    (req as any).admin = decoded;
+    (req as any).user = decoded;
     next();
   } catch (error) {
-    res.status(404).json({
-      msg: "Invalide Token or Expired token",
-    });
+    return res.status(401).json({ msg: "Invalid Token or Expired Token" });
   }
 };
