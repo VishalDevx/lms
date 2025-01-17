@@ -31,15 +31,24 @@ model Profile {
 }
 
 model Student {
-  id         Int         @id @default(autoincrement())
-  adminId    Int
-  rollNumber String      @unique
-  feeRecords FeeRecord[]
-  results    Result[]
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @updatedAt
-  admin      Admin       @relation(fields: [adminId], references: [id])
-  feeSystem  FeeSystem[]
+  id           Int         @id @default(autoincrement())
+  name         String
+  fatherName   String
+  motherName   String
+  gender       Gender
+  bloodGroup   String?
+  class        String
+  mobileNumber Int?
+  address      String
+  profilePic   String?
+  adminId      Int
+  rollNumber   String      @unique
+  feeRecords   FeeRecord[]
+  results      Result[]
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  admin        Admin       @relation(fields: [adminId], references: [id])
+  feeSystem    FeeSystem[]
 }
 
 model Staff {
@@ -95,4 +104,10 @@ enum Role {
   ADMIN
   STUDENT
   STAFF
+}
+
+enum Gender {
+  Male
+  Female
+  Others
 }
