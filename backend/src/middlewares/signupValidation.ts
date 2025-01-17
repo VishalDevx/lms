@@ -25,14 +25,3 @@ export const signupValidation = (
     });
   }
 };
-export const studentSchema = z.object({
-  name: z.string().min(1, "Please Submit the name of students !"),
-  fatherName: z.string().min(1, "Father Name"),
-  motherName: z.string().min(1, "mother name "),
-  gender: z.enum(["Male,Female,Others"]),
-  bloodGroup: z.string().min(1, "Blood Group"),
-  mobileNumber: z.string().min(10),
-  address: z.string().min(1),
-  profilePic: z.string().min(1),
-  rollNumber: z.string().min(1),
-});

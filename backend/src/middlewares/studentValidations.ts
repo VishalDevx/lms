@@ -1,4 +1,4 @@
-import { Request, response, NextFunction } from "express";
+import { Request, Response, NextFunction } from "express";
 import { z } from "zod";
 
 const studentSchema = z.object({
@@ -11,15 +11,16 @@ const studentSchema = z.object({
   address: z.string().min(1),
   profilePic: z.string().min(1),
   rollNumber: z.string().min(1),
+  adminId: z.number().min(1),
 });
 
 export const studentValidation = async (
   req: Request,
   res: Response,
   next: NextFunction
-) => {
+): Promise<any> => {
   try {
-    studentSchema.parse(req.body);
+    studentSchema.parse(req.header);
     next();
   } catch (error) {
     console.error(error);

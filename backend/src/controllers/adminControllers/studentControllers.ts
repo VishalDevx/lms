@@ -1,34 +1,18 @@
 import { Request, Response } from "express";
 import prisma from "../../config/db";
 
-export const addStudents = async (
+export async function createStudent(
   req: Request,
   res: Response
-): Promise<void> => {
-  const {
-    name,
-    fatherName,
-    motherName,
-    gender,
-    bloodGroup,
-    mobileNumber,
-    address,
-    profilePic,
-    rollNumber,
-  } = req.body;
+): Promise<void> {
+  const studentValidation = req.body;
   try {
     const createStudent = await prisma.student.create({
-      data: {
-        name,
-        fatherName,
-        motherName,
-        gender,
-        bloodGroup,
-        mobileNumber,
-        address,
-        profilePic,
-        rollNumber,
-      },
+      data: studentValidation,
+    });
+    res.status(200).json({
+      msg: "Students Created SuccessFully!",
+      createStudent,
     });
   } catch (error) {}
-};
+}

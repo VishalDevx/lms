@@ -2,6 +2,7 @@ import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
 import { dot } from "node:test/reporters";
 import authRoutes from "./routes/authRoutes";
+import adminRoutes from "./routes/adminRoutes";
 dotenv.config();
 const app: Express = express();
 const port = process.env.PORT || 3000;
