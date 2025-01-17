@@ -52,3 +52,44 @@ export const createStudent = async (
     });
   }
 };
+
+export const uniqueStudents = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { rollNumber } = req.body;
+    const uniqueStudents = await prisma.student.findUnique({
+      where: {
+        rollNumber,
+      },
+    });
+    res.status(200).json({
+      msg: " Get the Unique Students",
+      uniqueStudents,
+    });
+  } catch (error) {
+    res.status(400).json({
+      msg: " Internal Error ",
+      error,
+    });
+  }
+};
+
+export const students = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const students = await prisma.student.findMany();
+    res.status(200).json({
+      success: "true",
+      msg: " Students fetched successfully ",
+      data: students,
+    });
+  } catch (error) {
+    console.error("Error fetching students ", error);
+    res.status(400).json({
+      success: "false",
+      msg: "An error occured while fetching the students ",
+      error,
+    });
+  }
+};
