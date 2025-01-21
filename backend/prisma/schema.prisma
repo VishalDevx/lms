@@ -8,26 +8,25 @@ datasource db {
 }
 
 model Admin {
-  id             Int       @id @default(autoincrement())
-  name           String
-  email          String    @unique
-  password       String
-  role           Role      @default(ADMIN)
-  profile        Profile?
-  students       Student[]
-  staffMembers   Staff[]
-  expenseRecords Expense[]
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
+  id         Int    @id @default(autoincrement())
+  name       String
+  email      String @unique
+  password   String
+  profilePic String
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  Profile   Profile?
+  Student   Student[]
 }
 
 model Profile {
-  id      Int     @id @default(autoincrement())
-  adminId Int     @unique
+  id      Int    @id @default(autoincrement())
+  adminId Int    @unique
   phone   String
   address String
-  admin   Admin   @relation(fields: [adminId], references: [id])
-  Staff   Staff[]
+  admin   Admin  @relation(fields: [adminId], references: [id])
+  // Staff   Staff[]
 }
 
 model Student {
@@ -44,66 +43,29 @@ model Student {
   adminId      Int
   rollNumber   String      @unique
   feeRecords   FeeRecord[]
-  results      Result[]
+  // results      Result[]
   createdAt    DateTime    @default(now())
   updatedAt    DateTime    @updatedAt
   admin        Admin       @relation(fields: [adminId], references: [id])
-  feeSystem    FeeSystem[]
-}
-
-model Staff {
-  id        Int      @id @default(autoincrement())
-  adminId   Int
-  staffId   String   @unique
-  profileId Int?
-  results   Result[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  admin     Admin    @relation(fields: [adminId], references: [id])
-  profile   Profile? @relation(fields: [profileId], references: [id])
 }
 
 model FeeRecord {
-  id        Int      @id @default(autoincrement())
-  studentId Int
-  amount    Float
-  paidOn    DateTime
-  student   Student  @relation(fields: [studentId], references: [id])
-}
-
-model Result {
-  id        Int      @id @default(autoincrement())
-  studentId Int
-  staffId   Int
-  subject   String
-  grade     String
-  date      DateTime @default(now())
-  student   Student  @relation(fields: [studentId], references: [id])
-  staff     Staff    @relation(fields: [staffId], references: [id])
-}
-
-model FeeSystem {
-  id        Int      @id @default(autoincrement())
-  studentId Int
-  amount    Float
-  dueDate   DateTime
-  paid      Boolean  @default(false)
-  student   Student  @relation(fields: [studentId], references: [id])
-}
-
-model Expense {
-  id          Int      @id @default(autoincrement())
-  adminId     Int
+  id          Int       @id @default(autoincrement())
+  month       String
   amount      Float
-  description String
-  date        DateTime @default(now())
-  admin       Admin    @relation(fields: [adminId], references: [id])
+  dueDate     DateTime
+  status      FeeStatus @default(PENDING)
+  paymentDate DateTime?
+  Student     Student?  @relation(fields: [studentId], references: [id])
+  studentId   Int?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 }
 
-enum Role {
-  ADMIN
-  STUDENT
-  STAFF
+enum FeeStatus {
+  PENDING
+  PAID
+  OVERDUE
 }
 
 enum Gender {
@@ -111,3 +73,47 @@ enum Gender {
   Female
   Others
 }
+
+// model Staff {
+//   id        Int      @id @default(autoincrement())
+//   adminId   Int
+//   staffId   String   @unique
+//   profileId Int?
+//   results   Result[]
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+//   admin     Admin    @relation(fields: [adminId], references: [id])
+//   profile   Profile? @relation(fields: [profileId], references: [id])
+// }
+
+// model Result {
+//   id        Int      @id @default(autoincrement())
+//   studentId Int
+//   staffId   Int
+//   subject   String
+//   grade     String
+//   date      DateTime @default(now())
+//   student   Student  @relation(fields: [studentId], references: [id])
+//   staff     Staff    @relation(fields: [staffId], references: [id])
+// }
+
+// model Expense {
+//   id          Int      @id @default(autoincrement())
+//   adminId     Int
+//   amount      Float
+//   description String
+//   date        DateTime @default(now())
+//   admin       Admin    @relation(fields: [adminId], references: [id])
+// }
+
+// enum Role {
+//   ADMIN
+//   STUDENT
+//   STAFF
+// }
+
+// enum Gender {
+//   Male
+//   Female
+//   Others
+// }
