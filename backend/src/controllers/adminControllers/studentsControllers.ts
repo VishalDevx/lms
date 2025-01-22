@@ -7,6 +7,6 @@ export const studentSchema = async (
   res: Response
 ): Promise<void> => {
   try {
-    cosnt;
+    const {name ,fatherName ,motherName,gender,bloodGroup,class,mobileNumber,address,profilePic,rollNumber,createdAt,updatedAt}= req.body
   } catch (error) {}
 };
