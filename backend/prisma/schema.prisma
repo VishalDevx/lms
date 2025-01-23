@@ -35,7 +35,7 @@ model Student {
   motherName   String
   gender       Gender
   bloodGroup   String?
-  class        String
+  grade        String
   mobileNumber Int?
   address      String
   profilePic   String?
