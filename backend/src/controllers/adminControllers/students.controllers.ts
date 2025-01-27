@@ -1,38 +1,17 @@
 import { Request, Response } from "express";
-
+import {
+  StudentModel,
+  studentSchema,
+} from "../../middlewares/studentValidation";
 import prisma from "../../config/db";
-import { Gender } from "@prisma/client";
-
-export const studentSchema = async (
+export const addStudent = async (
   req: Request,
   res: Response
 ): Promise<void> => {
   try {
-    const {
-      name,
-      fatherName,
-      motherName,
-      gender,
-      bloodGroup,
-      grade,
-      mobileNumber,
-      address,
-      profilePic,
-      rollNumber,
-      createdAt,
-      updatedAt,
-    } = req.body;
-
-    const addStudent = await prisma.student.create({
-      data: {
-        name,
-        fatherName,
-        motherName,
-        gender,
-        bloodGroup,
-        grade,
-        mobileNumber,
-      },
+    const studentData: StudentModel = studentSchema.parse(req.body);
+    const student = await prisma.student.create({
+      data: studentData,
     });
   } catch (error) {}
 };
