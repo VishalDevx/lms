@@ -1,6 +1,6 @@
 import { error } from "console";
 import { Request, Response, NextFunction } from "express";
-import { z } from "zod";
+import { date, z } from "zod";
 
 const studentSchema = z.object({
   name: z
@@ -32,6 +32,19 @@ const studentSchema = z.object({
     .string()
     .optional()
     .transform((val) => (val ? new Date(val) : new Date())),
+});
+const feeSchema = z.object({
+  month: z.string().transform((val) => {
+    const date = val ? new Date(val) : new Date();
+    return date.getMonth() + 1; // getMonth() returns 0-11, so add 1
+  }),
+  amount: z.string().transform((val) => parseFloat(val)),
+  dueDate: z.coerce.date(),
+  createdAt: z
+    .string()
+    .optional()
+    .transform((val) => (val ? new Date(val) : new Date())),
+  updatedAt: z.date().optional(),
 });
 
 export const validateStudent = async (
