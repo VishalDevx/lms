@@ -1,16 +1,63 @@
+import { Request, Response, NextFunction } from "express";
 import { z } from "zod";
-import { Gender } from "@prisma/client";
 
-// Defining the schema, not a function
-export const studentSchema = z.object({
-  name: z.string({ required_error: "Name is Required" }),
-  fatherName: z.string({ required_error: "Father Name is Required" }),
-  motherName: z.string({ required_error: "Mother Name is Required" }),
-  gender: z.nativeEnum(Gender),
-  bloodGroup: z.string({ required_error: "Please Provide Your Blood Group" }),
-  mobileNumber: z.string({ required_error: "Mobile Number is Required" }),
-  profilePic: z.string({ required_error: "Please Provide Your Image" }),
-  rollNumber: z.string({ required_error: "Enter Your Roll Number" }),
+export const addStudentSchema = z.object({
+  body: z.object({
+    name: z
+      .string()
+      .min(2, "Name must be at least 2 characters long!")
+      .max(50, "Name must not exceed 50 characters!")
+      .nonempty("Name is required!"),
+
+    fatherName: z
+      .string()
+      .min(2, "Father name must be at least 2 characters long!")
+      .max(50, "Father name must not exceed 50 characters!")
+      .nonempty("Father name is required!"),
+
+    motherName: z
+      .string()
+      .min(2, "Mother name must be at least 2 characters long!")
+      .max(50, "Mother name must not exceed 50 characters!")
+      .nonempty("Mother name is required!"),
+
+    gender: z.enum(["Male", "Female", "Other"]),
+
+    bloodGroup: z.string().optional(),
+
+    grade: z.string().nonempty("Grade is required!"),
+
+    mobileNumber: z
+      .string()
+      .min(10, "Mobile number must be at least 10 digits!")
+      .max(15, "Mobile number must not exceed 15 digits!")
+      .optional(),
+
+    address: z.string().nonempty("Address is required!"),
+
+    profilePic: z.string().url().nonempty("Profile picture URL is required!"),
+
+    rollNumber: z.string().nonempty("Roll number is required!"),
+  }),
 });
 
-export type StudentModel = z.infer<typeof studentSchema>;
+export const studentValidation = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<any> => {
+  try {
+    // Validate request body against the schema
+    addStudentSchema.parse(req);
+
+    next();
+  } catch (error) {
+    console.error(error);
+    res.status(400).json({
+      msg: "Validation failed",
+    });
+  }
+};
+
+// Exporting type correctly
+export type AddStudentSchemaType = z.infer<typeof addStudentSchema>;
