@@ -1,80 +1,48 @@
-import { Request, Response, NextFunction } from "express";
-import prisma from "../../config/db"; // Ensure Prisma is correctly configured
-import { addStudentSchema } from "../../middlewares/studentValidation"; // Assuming the path is correct
+import { Request, Response } from "express";
 
-// Student Validation Middleware
-export const studentValidation = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): Promise<void> => {
-  try {
-    const validationResult = addStudentSchema.safeParse(req.body); // Validate the incoming body
+import prisma from "../../config/db";
 
-    if (!validationResult.success) {
-      res.status(400).json({
-        msg: "Validation failed",
-        errors: validationResult.error.format(),
-      });
-      return;
-    }
-
-    // Attach validated data to req.body for further use
-    req.body = validationResult.data.body;
-
-    next();
-  } catch (error) {
-    console.error("Validation Error:", error);
-    res.status(500).json({ msg: "Internal Server Error" });
-  }
-};
-
-// Controller to Add Student
 export const add_student = async (
   req: Request,
   res: Response
 ): Promise<void> => {
   try {
-    // Extract validated student data from req.body
     const {
       name,
       fatherName,
       motherName,
       gender,
-      grade,
       address,
       profilePic,
+      grade,
       rollNumber,
-      bloodGroup,
       mobileNumber,
+      bloodGroup,
+      createdAt,
     } = req.body;
-
-    // Create a student in the database
-    const newStudent = await prisma.student.create({
+    const add_student = await prisma.student.create({
       data: {
         name,
         fatherName,
         motherName,
         gender,
-        grade,
         address,
         profilePic,
+        grade,
         rollNumber,
-        bloodGroup: bloodGroup ?? null, // Optional field, set to null if not provided
-        mobileNumber: mobileNumber ?? null, // Optional field, set to null if not provided
+        mobileNumber,
+        bloodGroup,
+        createdAt,
       },
     });
-
-    // Respond with success message and created student data
-    res.status(201).json({
-      msg: "Student created successfully",
-      student: newStudent,
+    res.status(200).json({
+      msg: "Student is Created SuccessFully",
+      add_student,
     });
   } catch (error) {
-    console.error("Error adding student:", error);
-    res.status(500).json({
-      msg: "Internal Server Error",
-      error: error instanceof Error ? error.message : "Unknown error",
+    console.error(error);
+    res.status(401).json({
+      msg: "Internal Error",
     });
   }
 };
