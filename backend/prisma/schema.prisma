@@ -52,10 +52,21 @@ model FeeRecord {
   status      FeeStatus @default(PENDING)
   paymentDate DateTime?
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  Student   Student? @relation(fields: [studentId], references: [id])
-  studentId String?
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  Student    Student?     @relation(fields: [studentId], references: [id])
+  studentId  String?
+  FeeHistory FeeHistory[]
+}
+
+model FeeHistory {
+  id          Int       @id @default(autoincrement())
+  feeRecordId Int // Foreign key to the FeeRecord
+  status      FeeStatus // Status at the time of change
+  paymentDate DateTime? // Payment date at the time of the change
+  createdAt   DateTime  @default(now()) // Timestamp when the history record is created
+
+  FeeRecord FeeRecord @relation(fields: [feeRecordId], references: [id])
 }
 
 enum FeeStatus {
