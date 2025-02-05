@@ -59,12 +59,5 @@ export const add_fee = async (req: Request, res: Response): Promise<void> => {
       createdAt,
       updatedAt,
     } = req.body;
-    const add_fee = await prisma.feeRecord.create(
-      
-        data :{
-
-        }
-      
-    )
   } catch (error) {}
 };
