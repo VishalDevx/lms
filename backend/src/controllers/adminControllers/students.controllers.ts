@@ -46,3 +46,25 @@ export const add_student = async (
     });
   }
 };
+
+export const add_fee = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const {
+      month,
+      amount,
+      dueDate,
+
+      status,
+      paymentDate,
+      createdAt,
+      updatedAt,
+    } = req.body;
+    const add_fee = await prisma.feeRecord.create(
+      
+        data :{
+
+        }
+      
+    )
+  } catch (error) {}
+};
