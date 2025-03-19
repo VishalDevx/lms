@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 
 import prisma from "../../config/db";
 
-export const add_student = async (
+export const addStudent = async (
   req: Request,
   res: Response
 ): Promise<void> => {
