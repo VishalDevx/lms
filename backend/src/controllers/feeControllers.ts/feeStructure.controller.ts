@@ -9,8 +9,17 @@ export const createFeeStructure = async (
   try {
     const validateDate = feeStructureSchema.parse(req.body);
 
-    const neeFee = await prisma.feeStructure.create({
+    const newFee = await prisma.feeStructure.create({
       data: validateDate,
     });
-  } catch (error) {}
+    return res.status(200).json({
+      msg: "fees added in the student page",
+      newFee,
+    });
+  } catch (error) {
+    return res.status(404).json({
+      msg: " internal error ",
+      error,
+    });
+  }
 };
