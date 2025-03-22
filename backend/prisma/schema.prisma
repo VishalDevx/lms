@@ -30,6 +30,7 @@ model FeeStructure {
   name        String
   amount      Decimal
   dueDate     DateTime
+  grade       Grade
   frequency   FeeFrequency
   studentFees StudentFee[]
 }
