@@ -11,7 +11,10 @@ CREATE TYPE "FeeFrequency" AS ENUM ('MONTHLY', 'QUARTERLY', 'YEARLY', 'ONE_TIME'
 CREATE TYPE "FeeStatus" AS ENUM ('PENDING', 'PARTIALLY_PAID', 'PAID', 'OVERDUE');
 
 -- CreateEnum
-CREATE TYPE "Gender" AS ENUM ('Male', 'Female', 'Others');
+CREATE TYPE "Gender" AS ENUM ('MALE', 'FEMALE', 'OTHERS');
+
+-- CreateEnum
+CREATE TYPE "Grade" AS ENUM ('I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X');
 
 -- CreateTable
 CREATE TABLE "Admin" (
@@ -33,9 +36,9 @@ CREATE TABLE "Student" (
     "fatherName" TEXT NOT NULL,
     "motherName" TEXT NOT NULL,
     "gender" "Gender" NOT NULL,
-    "grade" TEXT NOT NULL,
+    "grade" "Grade" NOT NULL,
     "address" TEXT NOT NULL,
-    "profilePic" TEXT NOT NULL,
+    "profilePic" TEXT,
     "rollNumber" TEXT NOT NULL,
     "bloodGroup" TEXT,
     "mobileNumber" TEXT,

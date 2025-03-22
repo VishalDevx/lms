@@ -7,24 +7,13 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Admin {
-  id         Int            @id @default(autoincrement())
-  name       String
-  email      String         @unique
-  password   String
-  profilePic String
-  createdAt  DateTime       @default(now())
-  updatedAt  DateTime       @updatedAt
-  fee        FeeStructure[]
-}
-
 model Student {
   id           String       @id @default(uuid())
   name         String
   fatherName   String
   motherName   String
   gender       Gender
-  grade        String
+  grade        Grade
   address      String
   profilePic   String?
   rollNumber   String       @unique
@@ -43,8 +32,6 @@ model FeeStructure {
   dueDate     DateTime
   frequency   FeeFrequency
   studentFees StudentFee[]
-  adminId     Int
-  admin       Admin        @relation(fields: [adminId], references: [id])
 }
 
 model StudentFee {
@@ -114,7 +101,20 @@ enum FeeStatus {
 }
 
 enum Gender {
-  Male
-  Female
-  Others
+  MALE
+  FEMALE
+  OTHERS
+}
+
+enum Grade {
+  I
+  II
+  III
+  IV
+  V
+  VI
+  VII
+  VIII
+  IX
+  X
 }
