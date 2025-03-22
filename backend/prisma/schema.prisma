@@ -26,7 +26,7 @@ model Student {
   gender       Gender
   grade        String
   address      String
-  profilePic   String
+  profilePic   String?
   rollNumber   String       @unique
   bloodGroup   String? // Optional
   mobileNumber String? // Optional
