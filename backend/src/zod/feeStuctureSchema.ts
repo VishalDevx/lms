@@ -6,3 +6,10 @@ export const feeStructureSchema = z.object({
   grade: z.enum(["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"]),
   frequency: z.enum(["MONTHLY", "QUARTERLY", "YEARLY", "ONE_TIME"]),
 });
+
+export const studentFeeSchema = z.object({
+  status: z.enum(["PENDING", "PARTIALLY_PAID", "PAID", "OVERDUE"]),
+  paidAmount: z.number(),
+  dueAmount: z.number(),
+  dueDate: z.coerce.date(),
+});

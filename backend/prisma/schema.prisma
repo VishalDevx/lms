@@ -42,7 +42,7 @@ model StudentFee {
   dueAmount      Decimal
   dueDate        DateTime
   payments       Payment[]
-  feeStructureId String       @unique
+  feeStructureId String
   feeStructure   FeeStructure @relation(fields: [feeStructureId], references: [id])
   studentId      String
   student        Student      @relation(fields: [studentId], references: [id])

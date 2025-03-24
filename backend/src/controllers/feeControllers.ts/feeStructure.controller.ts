@@ -23,3 +23,33 @@ export const createFeeStructure = async (
     });
   }
 };
+
+export const studentFee = async (req: Request, res: Response): Promise<any> => {
+  try {
+    // Extract student ID from request params
+    const { studentId } = req.params;
+
+    // Fetch all Student Fees linked to this student
+    const studentFees = await prisma.studentFee.findMany({
+      where: { studentId },
+      include: { feeStructure: true }, // Include fee structure details
+    });
+
+    // If no fees found, return a message
+    if (studentFees.length === 0) {
+      return res.status(404).json({
+        msg: "No fees found for this student",
+      });
+    }
+
+    return res.status(200).json({
+      msg: "Student fees retrieved successfully",
+      studentFees,
+    });
+  } catch (error) {
+    return res.status(401).json({
+      msg: "error occured in the student fee ",
+      error,
+    });
+  }
+};
