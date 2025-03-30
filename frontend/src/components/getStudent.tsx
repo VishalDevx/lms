@@ -51,46 +51,52 @@ const GetStudent = () => {
   if (!student) return <p>No student data found.</p>;
 
   return (
-    <div className="max-w-md mx-auto p-6 bg-white shadow-md rounded-lg">
-      <h2 className="text-xl font-bold mb-4">Student Details</h2>
-
-      <img
-        src={student.profilePic}
-        alt="Profile"
-        className="w-32 h-32 object-cover rounded-full mx-auto mb-4"
-      />
-
-      <p>
-        <strong>Name:</strong> {student.name}
-      </p>
-      <p>
-        <strong>Father's Name:</strong> {student.fatherName}
-      </p>
-      <p>
-        <strong>Mother's Name:</strong> {student.motherName}
-      </p>
-      <p>
-        <strong>Gender:</strong> {student.gender}
-      </p>
-      <p>
-        <strong>Grade:</strong> {student.grade}
-      </p>
-      <p>
-        <strong>Address:</strong> {student.address}
-      </p>
-      <p>
-        <strong>Roll Number:</strong> {student.rollNumber}
-      </p>
-      <p>
-        <strong>Mobile Number:</strong> {student.mobileNumber}
-      </p>
-      <p>
-        <strong>Blood Group:</strong> {student.bloodGroup}
-      </p>
-      <p>
-        <strong>Joined At:</strong>{" "}
-        {new Date(student.createdAt).toLocaleString()}
-      </p>
+    <div className=" mx-auto p-6 bg-white shadow-md rounded-lg">
+      <h2 className="text-2xl m-2 p-2  font-bold mb-4 rounded-2xl  bg-blue-600">
+        My Profile
+      </h2>
+      <div className=" flex  justify-around  w-full m-auto ">
+        <div className="">
+          <p className=" p-1 text-xl">
+            <strong>Name:</strong> {student.name}
+          </p>
+          <p className=" p-1 text-xl">
+            <strong>Father's Name:</strong> {student.fatherName}
+          </p>
+          <p className=" p-1 text-xl">
+            <strong>Mother's Name:</strong> {student.motherName}
+          </p>
+          <p className=" p-1 text-xl">
+            <strong>Gender:</strong> {student.gender}
+          </p>
+          <p className=" p-1 text-xl">
+            <strong>Grade:</strong> {student.grade}
+          </p>
+          <p className=" p-1 text-xl">
+            <strong>Address:</strong> {student.address}
+          </p>
+          <p className=" p-1 text-xl">
+            <strong>Roll Number:</strong> {student.rollNumber}
+          </p>
+          <p className=" p-1 text-xl">
+            <strong>Mobile Number:</strong> {student.mobileNumber}
+          </p>
+          <p className=" p-1 text-xl">
+            <strong>Blood Group:</strong> {student.bloodGroup}
+          </p>
+          <p className=" p-1 text-xl">
+            <strong>Joined At:</strong>{" "}
+            {new Date(student.createdAt).toLocaleString()}
+          </p>
+        </div>
+        <div className="">
+          <img
+            src={student.profilePic}
+            alt=" Profile"
+            className="w-32 h-32 object-cover rounded-full mx-auto mb-4"
+          />
+        </div>
+      </div>
     </div>
   );
 };
