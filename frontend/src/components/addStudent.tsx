@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { z } from "zod";
 
 // Define the schema for student data
@@ -24,6 +25,39 @@ const studentSchema = z.object({
 // Type derived from the schema
 type StudentData = z.infer<typeof studentSchema>;
 
+// Create a type for students with an ID
+type Student = StudentData & { id: string | number };
+
+// Function to add student with API call
+const addStudent = async (studentData: StudentData): Promise<any> => {
+  try {
+    // Validate the data against the schema
+    const validatedData = studentSchema.parse(studentData);
+
+    // Send the validated data to the API
+    const response = await axios.post(
+      "http://localhost:8000/api/v1/admin/add_student",
+      validatedData,
+      {
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+
+    return { success: true, data: response.data };
+  } catch (error) {
+    // Check if it's a Zod validation error
+    if (error instanceof z.ZodError) {
+      console.error("Validation error:", error.errors);
+      return { success: false, errors: error.errors };
+    }
+
+    // Handle API or other errors
+    console.error("Error:", error);
+    return { success: false, error };
+  }
+};
+
+// Student Form Component
 interface StudentFormProps {
   addStudentApi: (data: StudentData) => Promise<any>;
   onStudentAdded?: (student: any) => void;
@@ -348,4 +382,103 @@ const StudentForm = ({ addStudentApi, onStudentAdded }: StudentFormProps) => {
   );
 };
 
-export default StudentForm;
+// Main Student Management Page Component
+const StudentManagementPage = () => {
+  const [students, setStudents] = useState<Student[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  // Fetch students on component mount
+  useEffect(() => {
+    const fetchStudents = async () => {
+      setIsLoading(true);
+      setError(null);
+
+      try {
+        const response = await axios.get(
+          "http://localhost:8000/api/v1/admin/students"
+        );
+        setStudents(response.data);
+      } catch (err) {
+        console.error("Error fetching students:", err);
+        setError("Failed to load students. Please try again later.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchStudents();
+  }, []);
+
+  // Function to handle form submission success
+  const handleStudentAdded = (newStudent: Student) => {
+    setStudents((prev) => [...prev, newStudent]);
+  };
+
+  return (
+    <div className="container mx-auto p-4">
+      <h1 className="text-3xl font-bold mb-8">Student Management</h1>
+
+      {/* Pass the addStudent function to the form */}
+      <StudentForm
+        onStudentAdded={handleStudentAdded}
+        addStudentApi={addStudent}
+      />
+
+      {/* Display the student list */}
+      <div className="mt-12">
+        <h2 className="text-2xl font-bold mb-4">Student List</h2>
+
+        {isLoading && <p className="text-gray-500">Loading students...</p>}
+
+        {error && (
+          <div className="bg-red-100 text-red-800 p-4 rounded mb-4">
+            {error}
+          </div>
+        )}
+
+        {students.length > 0 ? (
+          <div className="overflow-x-auto">
+            <table className="min-w-full bg-white border">
+              <thead>
+                <tr className="bg-gray-100">
+                  <th className="py-2 px-4 border text-left">Name</th>
+                  <th className="py-2 px-4 border text-left">Roll Number</th>
+                  <th className="py-2 px-4 border text-left">Grade</th>
+                  <th className="py-2 px-4 border text-left">Gender</th>
+                  <th className="py-2 px-4 border text-left">Mobile</th>
+                  <th className="py-2 px-4 border text-left">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {students.map((student) => (
+                  <tr key={student.id} className="border-b hover:bg-gray-50">
+                    <td className="py-2 px-4 border">{student.name}</td>
+                    <td className="py-2 px-4 border">{student.rollNumber}</td>
+                    <td className="py-2 px-4 border">{student.grade}</td>
+                    <td className="py-2 px-4 border">{student.gender}</td>
+                    <td className="py-2 px-4 border">{student.mobileNumber}</td>
+                    <td className="py-2 px-4 border">
+                      <button className="text-blue-500 hover:text-blue-700 mr-2">
+                        Edit
+                      </button>
+                      <button className="text-red-500 hover:text-red-700">
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : !isLoading && !error ? (
+          <p className="text-gray-500">
+            No students found. Add your first student using the form above.
+          </p>
+        ) : null}
+      </div>
+    </div>
+  );
+};
+
+export default StudentManagementPage;

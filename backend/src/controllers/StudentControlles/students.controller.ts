@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 
 import prisma from "../../config/db";
 import { studentSchema } from "../../zod/studentSchema";
-import { promises } from "dns";
+
 export const addStudent = async (req: Request, res: Response): Promise<any> => {
   try {
     // validate input date using zod
