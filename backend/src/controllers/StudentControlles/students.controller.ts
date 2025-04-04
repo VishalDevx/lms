@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 
 import prisma from "../../config/db";
 import { studentSchema } from "../../zod/studentSchema";
-
 export const addStudent = async (req: Request, res: Response): Promise<any> => {
   try {
     // validate input date using zod
@@ -94,6 +93,7 @@ export const updateStudent = async (
 export const allStudent = async (req: Request, res: Response): Promise<any> => {
   try {
     const allStudent = await prisma.student.findMany();
+    const fee = await prisma.studentFee.findMany();
     return res.status(201).json(allStudent);
   } catch (error) {
     console.error(error);
