@@ -103,26 +103,40 @@ export const allStudent = async (req: Request, res: Response): Promise<any> => {
     });
   }
 };
-
 export const studentByRollnumber = async (
   req: Request,
   res: Response
 ): Promise<any> => {
   try {
     const { rollNumber } = req.body;
+
     if (!rollNumber) {
       return res.status(404).json({
-        msg: " student not found",
+        msg: "Student not found",
       });
     }
-    const studentByRollnumber = await prisma.student.findUnique({
+
+    const studentWithFees = await prisma.student.findUnique({
       where: { rollNumber },
+      include: {
+        StudentFee: {
+          include: {
+            FeeStructure: true, // to get details of the fee assigned
+            payments: true, // if you also want payment history
+          },
+        },
+      },
     });
-    return res.status(201).json(studentByRollnumber);
+
+    if (!studentWithFees) {
+      return res.status(404).json({ msg: "Student not found" });
+    }
+    console.log(studentWithFees);
+    return res.status(200).json(studentWithFees);
   } catch (error) {
-    console.error(400);
+    console.error("Error fetching student with fee:", error);
     return res.status(500).json({
-      msg: " internal error",
+      msg: "Internal error",
       error,
     });
   }
