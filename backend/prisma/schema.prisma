@@ -8,7 +8,7 @@ datasource db {
 }
 
 model Student {
-  id           Int            @id @default(autoincrement())
+  id           Int          @id @default(autoincrement())
   name         String
   fatherName   String
   motherName   String
@@ -16,45 +16,43 @@ model Student {
   grade        Grade
   address      String
   profilePic   String?
-  rollNumber   String         @unique
+  rollNumber   String       @unique
   bloodGroup   String? // Optional
   mobileNumber String? // Optional
-  createdAt    DateTime       @default(now())
+  createdAt    DateTime     @default(now())
   payments     Payment[]
   feeHistory   FeeHistory[]
   StudentFee   StudentFee[]
-  feeStructur  FeeStructure[]
 }
 
 model FeeStructure {
   id          Int          @id @default(autoincrement())
   name        String
-  amount      Decimal
-  dueDate     DateTime
+  amount      Float
+  month       DateTime
   grade       Grade
-  frequency   FeeFrequency
   studentFees StudentFee[]
-  Student     Student?     @relation(fields: [studentId], references: [id])
-  studentId   Int?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
 }
 
 model StudentFee {
   id         Int       @id @default(autoincrement())
   status     FeeStatus @default(PENDING)
-  paidAmount Decimal   @default(0.0)
-  dueAmount  Decimal
+  paidAmount Float     @default(0.0)
+  dueAmount  Float
   dueDate    DateTime
   payments   Payment[]
 
-  Student        Student?      @relation(fields: [studentId], references: [id])
-  studentId      Int?
-  FeeStructure   FeeStructure? @relation(fields: [feeStructureId], references: [id])
-  feeStructureId Int?
+  Student        Student      @relation(fields: [studentId], references: [id])
+  studentId      Int
+  FeeStructure   FeeStructure @relation(fields: [feeStructureId], references: [id])
+  feeStructureId Int
 }
 
 model Payment {
   id             String         @id @default(uuid())
-  amount         Decimal
+  amount         Float
   method         PaymentMethod
   transactionId  String? // Gateway transaction ID
   paymentGateway PaymentGateway
@@ -78,6 +76,11 @@ model FeeHistory {
   studentId Int?
 }
 
+model staff {
+  id   Int    @id @default(autoincrement())
+  name String
+}
+
 enum PaymentGateway {
   STRIPE
   RAZORPAY
@@ -91,13 +94,6 @@ enum PaymentMethod {
   CREDIT_CARD
   UPI
   PAYPAL
-}
-
-enum FeeFrequency {
-  MONTHLY
-  QUARTERLY
-  YEARLY
-  ONE_TIME
 }
 
 enum FeeStatus {
@@ -114,14 +110,17 @@ enum Gender {
 }
 
 enum Grade {
-  I
-  II
-  III
-  IV
-  V
-  VI
-  VII
-  VIII
-  IX
-  X
+  NURSERY
+  LKG
+  UKG
+  FIRST
+  SECOND
+  THIRD
+  FOURTH
+  FIFTH
+  SIXTH
+  SEVENTH
+  EIGHTH
+  NINTH
+  TENTH
 }
