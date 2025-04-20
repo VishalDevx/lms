@@ -2,7 +2,10 @@ import { Request, Response } from "express";
 
 import prisma from "../../config/db";
 import { studentSchema } from "../../zod/studentSchema";
-export const addStudent = async (req: Request, res: Response): Promise<any> => {
+export const addStudent = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     // validate input date using zod
     const validatedData = studentSchema.parse(req.body);
@@ -19,7 +22,7 @@ export const addStudent = async (req: Request, res: Response): Promise<any> => {
       },
     });
     if (existStudent) {
-      return res.status(400).json({
+      res.status(400).json({
         msg: "Roll Number and mobile number is already exists !",
       });
     }
@@ -27,13 +30,13 @@ export const addStudent = async (req: Request, res: Response): Promise<any> => {
     const newStudent = await prisma.student.create({
       data: validatedData,
     });
-    return res.status(201).json({
+    res.status(201).json({
       msg: " student created SuccessFully",
       newStudent,
     });
   } catch (error) {
     console.error(error);
-    return res.status(400).json({
+    res.status(400).json({
       msg: " Internal Error when adding the new student !",
       error,
     });
@@ -108,7 +111,7 @@ export const studentByRollnumber = async (
   res: Response
 ): Promise<any> => {
   try {
-    const { rollNumber } = req.body;
+    const { rollNumber } = req.params;
 
     if (!rollNumber) {
       return res.status(404).json({

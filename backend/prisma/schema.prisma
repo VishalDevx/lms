@@ -76,9 +76,36 @@ model FeeHistory {
   studentId Int?
 }
 
-model staff {
-  id   Int    @id @default(autoincrement())
-  name String
+model Staff {
+  id            Int      @id @default(autoincrement())
+  name          String
+  gender        Gender
+  dob           DateTime
+  phoneNumber   String
+  email         String   @unique
+  password      String
+  address       String
+  profilePic    String?
+  qualification String?
+  subject       String
+  university    String?
+}
+
+model Expense {
+  id          Int             @id @default(autoincrement())
+  title       String
+  amount      Float
+  type        TranscationType
+  description String
+  date        DateTime
+  paidTo      String?
+  paidBy      String
+  attechment  String?
+}
+
+enum TranscationType {
+  CREDIT
+  DEBIT
 }
 
 enum PaymentGateway {

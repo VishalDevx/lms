@@ -27,10 +27,18 @@ export const feeStructureSchema = z.object({
 });
 
 export const studentFeeSchema = z.object({
-  status: FeeStatusEnum.default("PENDING"),
-  paidAmount: z.number().min(0, "Paid amount cannot be negative").default(0),
-  dueAmount: z.number().positive("Due amount must be greater than 0"),
-  dueDate: z.coerce.date(), // Accepts both string or Date
-  studentId: z.number().int().positive("Student ID is required"),
-  feeStructureId: z.number().int().positive("Fee structure ID is required"),
+  status: z.enum(["PENDING", "PAID", "PARTIALLY_PAID"]).optional(), // Adjust enum if more values exist
+  paidAmount: z
+    .number()
+    .min(0, { message: "Paid amount cannot be negative" })
+    .default(0),
+  dueAmount: z
+    .number()
+    .min(0.01, { message: "Due amount must be greater than 0" }),
+  dueDate: z.coerce.date({ required_error: "Due date is required" }),
+
+  studentId: z.number().int({ message: "Student ID must be an integer" }),
+  feeStructureId: z
+    .number()
+    .int({ message: "FeeStructure ID must be an integer" }),
 });

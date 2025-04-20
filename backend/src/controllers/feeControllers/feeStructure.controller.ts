@@ -2,7 +2,10 @@ import { Request, Response } from "express";
 import prisma from "../../config/db";
 
 import { FeeStatus } from "@prisma/client";
-import { feeStructureSchema } from "../../zod/feeStuctureSchema";
+import {
+  feeStructureSchema,
+  studentFeeSchema,
+} from "../../zod/feeStuctureSchema";
 
 export const assignFee = async (req: Request, res: Response): Promise<any> => {
   try {
@@ -51,6 +54,21 @@ export const assignFee = async (req: Request, res: Response): Promise<any> => {
     return res.status(500).json({
       message: "Something went wrong while assigning fee",
       error: error.message,
+    });
+  }
+};
+export const studentFee = async (req: Request, res: Response): Promise<any> => {
+  try {
+    // const validatedData = studentFeeSchema.parse(req.body);
+    const studentFee = await prisma.studentFee.findMany({});
+    return res.status(201).json({
+      msg: "student fee ",
+      studentFee,
+    });
+  } catch (error) {
+    return res.status(403).json({
+      msg: " not availble to find the fee ",
+      error,
     });
   }
 };

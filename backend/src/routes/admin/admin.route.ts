@@ -5,19 +5,36 @@ import {
   studentByRollnumber,
   updateStudent,
 } from "../../controllers/StudentControlles/students.controller";
-import { assignFee } from "../../controllers/feeControllers.ts/feeStructure.controller";
-import { getStudentFees } from "../../controllers/feeControllers.ts/getStudentFee.controller";
+import {
+  assignFee,
+  studentFee,
+} from "../../controllers/feeControllers/feeStructure.controller";
+import { getStudentFees } from "../../controllers/feeControllers/getStudentFee.controller";
+import {
+  getStaff,
+  staffAdd,
+  staffByname,
+  updateStaff,
+} from "../../controllers/staffController/manageStaff.controller";
 
 const adminRoutes = Router();
 
 // Student Management
-adminRoutes.post("/add_student", addStudent);
-adminRoutes.put("/update_student", updateStudent);
-adminRoutes.get("/all_student", allStudent);
-adminRoutes.get("/:rollNumber", studentByRollnumber);
+adminRoutes.get("/students", allStudent); // plural
+adminRoutes.post("/students", addStudent);
+adminRoutes.put("/students/:rollNumber", updateStudent); // use rollNumber in URL
+adminRoutes.get("/students/:rollNumber", studentByRollnumber);
 
 // Fee Management
 adminRoutes.post("/assign_fee", assignFee); // assign fee to a whole grade
 adminRoutes.get("/student/:studentId/fees", getStudentFees); // view fees of a student (admin-side)
+adminRoutes.get("/student_fee", studentFee);
+
+// staff Management
+
+adminRoutes.post("/staff", staffAdd);
+adminRoutes.get("/staff", getStaff);
+adminRoutes.get("/staff/:email", staffByname);
+adminRoutes.put("/staff/:email", updateStaff);
 
 export default adminRoutes;
