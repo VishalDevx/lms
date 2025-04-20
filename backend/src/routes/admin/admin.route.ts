@@ -16,6 +16,10 @@ import {
   staffByname,
   updateStaff,
 } from "../../controllers/staffController/manageStaff.controller";
+import {
+  addExpense,
+  getExpense,
+} from "../../controllers/expenseController/expense.controller";
 
 const adminRoutes = Router();
 
@@ -37,4 +41,7 @@ adminRoutes.get("/staff", getStaff);
 adminRoutes.get("/staff/:email", staffByname);
 adminRoutes.put("/staff/:email", updateStaff);
 
+// expense Management
+adminRoutes.post("/expense", addExpense);
+adminRoutes.get("/expense", getExpense);
 export default adminRoutes;

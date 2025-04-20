@@ -1,4 +1,7 @@
 -- CreateEnum
+CREATE TYPE "TranscationType" AS ENUM ('CREDIT', 'DEBIT');
+
+-- CreateEnum
 CREATE TYPE "PaymentGateway" AS ENUM ('STRIPE', 'RAZORPAY', 'PAYPAL', 'PAYTM');
 
 -- CreateEnum
@@ -85,15 +88,43 @@ CREATE TABLE "FeeHistory" (
 );
 
 -- CreateTable
-CREATE TABLE "staff" (
+CREATE TABLE "Staff" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
+    "gender" "Gender" NOT NULL,
+    "dob" TIMESTAMP(3) NOT NULL,
+    "phoneNumber" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
+    "password" TEXT NOT NULL,
+    "address" TEXT NOT NULL,
+    "profilePic" TEXT,
+    "qualification" TEXT,
+    "subject" TEXT NOT NULL,
+    "university" TEXT,
 
-    CONSTRAINT "staff_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "Staff_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Expense" (
+    "id" SERIAL NOT NULL,
+    "title" TEXT NOT NULL,
+    "amount" DOUBLE PRECISION NOT NULL,
+    "type" "TranscationType" NOT NULL,
+    "description" TEXT NOT NULL,
+    "date" TIMESTAMP(3) NOT NULL,
+    "paidTo" TEXT,
+    "paidBy" TEXT NOT NULL,
+    "attechment" TEXT,
+
+    CONSTRAINT "Expense_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Student_rollNumber_key" ON "Student"("rollNumber");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Staff_email_key" ON "Staff"("email");
 
 -- AddForeignKey
 ALTER TABLE "StudentFee" ADD CONSTRAINT "StudentFee_studentId_fkey" FOREIGN KEY ("studentId") REFERENCES "Student"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
