@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 
 import prisma from "../../config/db";
-import { studentSchema } from "../../zod/studentSchema";
+import { studentSchema } from "@vishaldevsx/lms-common";
 export const addStudent = async (
   req: Request,
   res: Response

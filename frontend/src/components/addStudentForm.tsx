@@ -1,9 +1,27 @@
-// src/components/AddStudentForm.tsx
-import z from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { studentSchema } from "@vishaldevsx/lms-common"; // replace with your actual path
-type StudentType = z.infer<typeof studentSchema>;
-const AddStudentForm = () => {};
+// components/AddStudentForm.tsx
+import { useStudentForm } from "../hooks/useStudentForm";
+
+const AddStudentForm = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useStudentForm(); // ✅ Works now
+
+  const onSubmit = (data: any) => {
+    console.log(data); // your form data
+  };
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <input {...register("name")} placeholder="Name" />
+      {errors.name && <span>{errors.name.message}</span>}
+
+      {/* Add more fields as needed */}
+
+      <button type="submit">Submit</button>
+    </form>
+  );
+};
 
 export default AddStudentForm;

@@ -2,10 +2,7 @@ import { Request, Response } from "express";
 import prisma from "../../config/db";
 
 import { FeeStatus } from "@prisma/client";
-import {
-  feeStructureSchema,
-  studentFeeSchema,
-} from "../../zod/feeStuctureSchema";
+import { feeStructureSchema, studentFeeSchema } from "@vishaldevsx/lms-common";
 
 export const assignFee = async (req: Request, res: Response): Promise<any> => {
   try {

@@ -1,5 +1,4 @@
-import React from "react";
-import AddStudentForm from "./components/addStudent";
+import AddStudentForm from "./components/addStudentForm";
 
 function App() {
   return (

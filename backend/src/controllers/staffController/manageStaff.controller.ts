@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 
 import prisma from "../../config/db";
-import { staffSchema } from "../../zod/staffSchema";
+import { staffSchema } from "@vishaldevsx/lms-common";
 export const staffAdd = async (req: Request, res: Response): Promise<void> => {
   try {
     const validatedData = staffSchema.parse(req.body);

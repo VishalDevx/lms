@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import prisma from "../../config/db";
-import { expenseSchema } from "../../zod/expenseSchema";
+
+import { expenseSchema } from "@vishaldevsx/lms-common";
 
 export const addExpense = async (
   req: Request,
