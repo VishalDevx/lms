@@ -1,117 +1,203 @@
 import axios from "axios";
-import { useStudentForm } from "../hooks/useStudentForm";
-import { Gender, GradeEnum } from "@vishaldevsx/lms-common";
+import useStudentForm from "../hooks/useStudentForm";
 
-export const StudentForm = () => {
+const genderOptions = ["MALE", "FEMALE", "OTHERS"];
+const gradeOptions = [
+  "NURSERY",
+  "LKG",
+  "UKG",
+  "FIRST",
+  "SECOND",
+  "THIRD",
+  "FOURTH",
+  "FIFTH",
+  "SIXTH",
+  "SEVENTH",
+  "EIGHTH",
+  "NINTH",
+  "TENTH",
+]; // etc.
+
+const AddStudentForm = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useStudentForm();
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: any): Promise<void> => {
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/v1/admin/students",
-        data
+        "http://localhost:8000/api/v1/admin/students"
       );
-      console.log("success:", response.data);
+      console.log(response.data);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
-
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-      <div>
-        <label htmlFor="name">Name:</label>
-        <input id="name" {...register("name")} className="border p-2 w-full" />
-        {errors.name && <p className="text-red-500">{errors.name.message}</p>}
+    <form
+      className="bg-gray-100 flex w-1/2 m-auto items-center justify-center h-screen flex-col shadow-2xl p-8 rounded-lg"
+      onSubmit={handleSubmit(onSubmit)}
+    >
+      <div className="w-full mb-4">
+        <input
+          className="p-3 bg-white text-black text-xl rounded w-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="Name"
+          type="text"
+          id="name"
+          {...register("name")}
+        />
+        {errors.name && (
+          <span className="text-red-500 text-sm">{errors.name.message}</span>
+        )}
       </div>
 
-      <div>
-        <label htmlFor="fatherName">Father Name:</label>
+      <div className="w-full mb-4">
         <input
+          className="p-3 bg-white text-black text-xl rounded w-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="Father's Name"
+          type="text"
           id="fatherName"
           {...register("fatherName")}
-          className="border p-2 w-full"
         />
         {errors.fatherName && (
-          <p className="text-red-500">{errors.fatherName.message}</p>
+          <span className="text-red-500 text-sm">
+            {errors.fatherName.message}
+          </span>
         )}
       </div>
 
-      <div>
-        <label htmlFor="motherName">Mother Name:</label>
+      <div className="w-full mb-4">
         <input
+          className="p-3 bg-white text-black text-xl rounded w-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="Mother's Name"
+          type="text"
           id="motherName"
           {...register("motherName")}
-          className="border p-2 w-full"
         />
         {errors.motherName && (
-          <p className="text-red-500">{errors.motherName.message}</p>
+          <span className="text-red-500 text-sm">
+            {errors.motherName.message}
+          </span>
         )}
       </div>
-      <div>
-        <label htmlFor="gender">Gender:</label>
+
+      <div className="w-full mb-4">
         <select
+          className="p-3 bg-white text-black text-xl rounded w-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
           id="gender"
           {...register("gender")}
-          className="border p-2 w-full"
         >
-          <option value="">Select Gender</option>
-          {Object.values(Gender).map((gender) => (
-            <option value={gender} key={gender}>
-              {gender}
+          {genderOptions.map((gender) => (
+            <option key={gender} value={gender}>
+              {gender.charAt(0).toUpperCase() + gender.slice(1)}
             </option>
           ))}
         </select>
         {errors.gender && (
-          <p className="text-red-500">{errors.gender.message}</p>
+          <span className="text-red-500 text-sm">{errors.gender.message}</span>
         )}
       </div>
-      <div>
-        <label htmlFor="grade">Grade:</label>
-        <select id="grade" {...register("grade")} className="border p-2 w-full">
-          <option value="">Select Grade</option>
-          {Object.values(GradeEnum).map((grade) => (
-            <option value={grade} key={grade}>
-              {grade}
+
+      <div className="w-full mb-4">
+        <select
+          className="p-3 bg-white text-black text-xl rounded w-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          id="grade"
+          {...register("grade")}
+        >
+          {gradeOptions.map((grade) => (
+            <option key={grade} value={grade}>
+              {grade.charAt(0).toUpperCase() + grade.slice(1)}
             </option>
           ))}
         </select>
-        {errors.grade && <p className="text-red-500">{errors.grade.message}</p>}
+        {errors.grade && (
+          <span className="text-red-500 text-sm">{errors.grade.message}</span>
+        )}
       </div>
 
-      <div>
-        <label htmlFor="address"> Address : </label>
+      <div className="w-full mb-4">
         <input
-          id="address"
-          {...register("address")}
-          className="border p-2 w-full"
-        />
-        {errors.address && (
-          <p className="text-red-500">{errors.address.message}</p>
-        )}
-      </div>
-      <div>
-        <label htmlFor="profilePic">ProfiLe Pic : </label>
-        <input
-          type="file"
-          id="picture"
+          className="p-3 bg-white text-black text-xl rounded w-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="Profile Pic"
+          type="text"
+          id="profilePic"
           {...register("profilePic")}
-          className="border p-2 w-full"
         />
         {errors.profilePic && (
-          <p className="text-red-500">{errors.profilePic.message}</p>
+          <span className="text-red-500 text-sm">
+            {errors.profilePic.message}
+          </span>
         )}
       </div>
+
+      <div className="w-full mb-4">
+        <input
+          className="p-3 bg-white text-black text-xl rounded w-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="Roll Number"
+          type="text"
+          id="rollNumber"
+          {...register("rollNumber")}
+        />
+        {errors.rollNumber && (
+          <span className="text-red-500 text-sm">
+            {errors.rollNumber.message}
+          </span>
+        )}
+      </div>
+
+      <div className="w-full mb-4">
+        <input
+          className="p-3 bg-white text-black text-xl rounded w-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="Blood Group"
+          type="text"
+          id="bloodGroup"
+          {...register("bloodGroup")}
+        />
+        {errors.bloodGroup && (
+          <span className="text-red-500 text-sm">
+            {errors.bloodGroup.message}
+          </span>
+        )}
+      </div>
+
+      <div className="w-full mb-4">
+        <input
+          className="p-3 bg-white text-black text-xl rounded w-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="Mobile Number"
+          type="text"
+          id="mobileNumber"
+          {...register("mobileNumber")}
+        />
+        {errors.mobileNumber && (
+          <span className="text-red-500 text-sm">
+            {errors.mobileNumber.message}
+          </span>
+        )}
+      </div>
+
+      <div className="w-full mb-6">
+        <input
+          className="p-3 bg-white text-black text-xl rounded w-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="Address"
+          type="text"
+          id="address"
+          {...register("address")}
+        />
+        {errors.address && (
+          <span className="text-red-500 text-sm">{errors.address.message}</span>
+        )}
+      </div>
+
       <button
         type="submit"
-        className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
+        className="p-3 bg-blue-500 text-white text-xl rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
       >
         Submit
       </button>
     </form>
   );
 };
+
+export default AddStudentForm;

@@ -2,47 +2,49 @@ import { Request, Response } from "express";
 
 import prisma from "../../config/db";
 import { studentSchema } from "@vishaldevsx/lms-common";
-export const addStudent = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
+import { ZodError } from "zod";
+export const addStudent = async (req: Request, res: Response): Promise<any> => {
   try {
-    // validate input date using zod
     const validatedData = studentSchema.parse(req.body);
 
-    // check for uniqueness in prisma
     const existStudent = await prisma.student.findFirst({
       where: {
         OR: [
           { rollNumber: validatedData.rollNumber },
-          {
-            mobileNumber: validatedData.mobileNumber,
-          },
+          { mobileNumber: validatedData.mobileNumber },
         ],
       },
     });
+
     if (existStudent) {
-      res.status(400).json({
-        msg: "Roll Number and mobile number is already exists !",
+      return res.status(400).json({
+        msg: "Roll Number and mobile number already exist!",
       });
     }
-    // Insert a new student in the database
+
     const newStudent = await prisma.student.create({
       data: validatedData,
     });
-    res.status(201).json({
-      msg: " student created SuccessFully",
+
+    return res.status(201).json({
+      msg: "Student created successfully",
       newStudent,
     });
   } catch (error) {
     console.error(error);
-    res.status(400).json({
-      msg: " Internal Error when adding the new student !",
+    if (error instanceof ZodError) {
+      return res.status(400).json({
+        msg: "Validation failed",
+        issues: error.errors,
+      });
+    }
+
+    return res.status(500).json({
+      msg: "Internal error when adding the new student",
       error,
     });
   }
 };
-
 export const updateStudent = async (
   req: Request,
   res: Response

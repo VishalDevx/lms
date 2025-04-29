@@ -6,8 +6,9 @@ import { z } from "zod";
 
 type StudentType = z.infer<typeof studentSchema>;
 
-export const useStudentForm = () => {
+const useStudentForm = () => {
   return useForm<StudentType>({
     resolver: zodResolver(studentSchema),
   });
 };
+export default useStudentForm;
