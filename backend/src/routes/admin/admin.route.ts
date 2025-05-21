@@ -20,6 +20,10 @@ import {
   addExpense,
   getExpense,
 } from "../../controllers/expenseController/expense.controller";
+import {
+  expenseDashBoard,
+  feeDashBoard,
+} from "../../controllers/dashBoardController/dashBoard.controller";
 
 const adminRoutes = Router();
 
@@ -44,4 +48,8 @@ adminRoutes.put("/staff/:email", updateStaff);
 // expense Management
 adminRoutes.post("/expense", addExpense);
 adminRoutes.get("/expense", getExpense);
+
+// dashboard Management
+adminRoutes.get("/dashboard/expense", expenseDashBoard);
+adminRoutes.get("/dashboard/fee", feeDashBoard);
 export default adminRoutes;
