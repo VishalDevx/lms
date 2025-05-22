@@ -28,7 +28,7 @@
     "@prisma/client": "^6.5.0",
     "@types/body-parser": "^1.19.5",
     "@types/nodemon": "^1.19.6",
-    "@vishaldevsx/lms-common": "^1.0.0",
+    "@vishaldevsx/lms-common": "^1.1.2",
     "bcrypt": "^5.1.1",
     "body-parser": "^2.2.0",
     "dotenv": "^16.4.7",
