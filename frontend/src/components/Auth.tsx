@@ -1,9 +1,10 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AdminSignupInput } from "@vishaldevsx/lms-common";
 import axios from "axios";
 import { ChangeEvent, useState } from "react";
 import { BACKEND_URL } from "../config";
 const Auth = ({ type }: { type: "signup" | "signin" }) => {
+  const navigate = useNavigate();
   const [postInputs, setPostInputs] = useState<AdminSignupInput>({
     name: "",
     email: "",
@@ -15,11 +16,11 @@ const Auth = ({ type }: { type: "signup" | "signin" }) => {
         `${BACKEND_URL}/api/v1/auth/${
           type === "signup" ? "sign-up" : "sign-in"
         }`,
-
         postInputs
       );
       const jwt = response.data;
       localStorage.setItem("token", jwt);
+      navigate("/dashboard");
     } catch (error) {
       console.error(error);
     }
@@ -36,7 +37,7 @@ const Auth = ({ type }: { type: "signup" | "signin" }) => {
                 : "Already have an account?"}
               <Link
                 className="pl-2 underline"
-                to={type === "signin" ? "/sign-up" : "/sign-in"}
+                to={type === "signin" ? "/signup" : "/signin"}
               >
                 {type === "signin" ? "Sign up" : "Sign in"}
               </Link>
@@ -61,7 +62,7 @@ const Auth = ({ type }: { type: "signup" | "signin" }) => {
               onChange={(e) => {
                 setPostInputs({
                   ...postInputs,
-                  email: e.target.value,
+                  name: e.target.value,
                 });
               }}
             />
