@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { getALlStudent } from "../api/student.api";
 import { StudentType } from "@vishaldevsx/lms-common";
+import { Link } from "react-router-dom";
 
-const StudentList = () => {
+const StudentTable = () => {
   const [students, setStudents] = useState<StudentType[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<unknown>(null);
@@ -11,7 +12,7 @@ const StudentList = () => {
     const fetchData = async () => {
       try {
         const response = await getALlStudent();
-        setStudents(response.data); // Make sure this is an array
+        setStudents(response.data);
       } catch (err) {
         setError(err);
       } finally {
@@ -31,28 +32,31 @@ const StudentList = () => {
     );
 
   return (
-    <div className="p-6">
+    <div className="p-6 w-full">
       <h2 className="text-2xl font-bold mb-6 text-center">All Students</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {students.map((student: StudentType) => (
-          <div
+          <Link
             key={student.rollNumber}
-            className="bg-white shadow-md rounded-xl p-4 hover:shadow-lg transition"
+            to={`/students/${student.rollNumber}`}
+            className="w-1/4 p-2" // if using flex-wrap for grid
           >
-            <h3 className="text-xl font-semibold">{student.name}</h3>
-            <p className="text-sm text-gray-600">Grade: {student.grade}</p>
-            <p className="text-sm text-gray-600">Gender: {student.gender}</p>
-            <p className="text-sm text-gray-600">
-              Father: {student.fatherName}
-            </p>
-            <p className="text-sm text-gray-600">
-              Mobile: {student.mobileNumber}
-            </p>
-          </div>
+            <div className="bg-white shadow-md rounded-xl p-4 hover:shadow-lg transition cursor-pointer">
+              <h3 className="text-xl font-semibold mb-2">{student.name}</h3>
+              <p className="text-sm text-gray-600">Grade: {student.grade}</p>
+              <p className="text-sm text-gray-600">Gender: {student.gender}</p>
+              <p className="text-sm text-gray-600">
+                Father: {student.fatherName}
+              </p>
+              <p className="text-sm text-gray-600">
+                Mobile: {student.mobileNumber}
+              </p>
+            </div>
+          </Link>
         ))}
       </div>
     </div>
   );
 };
 
-export default StudentList;
+export default StudentTable;
