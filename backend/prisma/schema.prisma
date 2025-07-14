@@ -6,11 +6,12 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
-model Admin{
-id Int @id @default(autoincrement())
-name String
-email String @unique
-password String
+
+model Admin {
+  id       Int     @id @default(autoincrement())
+  name     String?
+  email    String  @unique
+  password String
 }
 
 model Student {
@@ -97,21 +98,22 @@ model Staff {
   university    String?
 }
 
-model Expense {
+model ExpenseTracker {
   id          Int             @id @default(autoincrement())
   title       String
   amount      Float
-  type        TranscationType
+  type        TransactionType
   description String
   date        DateTime
-  paidTo      String?
-  paidBy      String
-  attechment  String?
+  category    String?
+  createdAt   DateTime        @default(now())
+  
 }
 
-enum TranscationType {
-  CREDIT
-  DEBIT
+
+enum  TransactionType {
+  Income
+  Expense
 }
 
 enum PaymentGateway {

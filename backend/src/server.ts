@@ -7,9 +7,10 @@ import express, {
 } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import adminRoutes from "./routes/admin/admin.route";
+import adminRoutes from "./routes/admin.route";
 import paymentRoutes from "./routes/payment.route";
 import bodyParser from "body-parser";
+import authRoutes from "./routes/auth.route";
 
 dotenv.config();
 const app: Express = express();
@@ -29,6 +30,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use("/api/v1/admin/", adminRoutes);
 app.use("/api/payment/", paymentRoutes);
+app.use("/api/v1/auth/", authRoutes);
 
 // Error-handling middleware - ✅ returns void
 const jsonErrorHandler: ErrorRequestHandler = (err, req, res, next) => {

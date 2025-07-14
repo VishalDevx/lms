@@ -18,6 +18,7 @@ export const staffAdd = async (req: Request, res: Response): Promise<void> => {
     });
     res.status(201).json({
       msg: "staff adding successfully",
+      staffAdd,
     });
   } catch (error) {
     console.error(error);

@@ -4,26 +4,22 @@ import {
   allStudent,
   studentByRollnumber,
   updateStudent,
-} from "../../controllers/StudentControlles/students.controller";
+} from "../controllers/StudentControlles/students.controller";
 import {
   assignFee,
   studentFee,
-} from "../../controllers/feeControllers/feeStructure.controller";
-import { getStudentFees } from "../../controllers/feeControllers/getStudentFee.controller";
+} from "../controllers/feeControllers/feeStructure.controller";
+import { getStudentFees } from "../controllers/feeControllers/getStudentFee.controller";
 import {
   getStaff,
   staffAdd,
   staffByname,
   updateStaff,
-} from "../../controllers/staffController/manageStaff.controller";
+} from "../controllers/staffController/manageStaff.controller";
 import {
-  addExpense,
-  getExpense,
-} from "../../controllers/expenseController/expense.controller";
-import {
-  expenseDashBoard,
-  feeDashBoard,
-} from "../../controllers/dashBoardController/dashBoard.controller";
+  addTrascation,
+  totalIncome,
+} from "../controllers/expenseController/expense.controller";
 
 const adminRoutes = Router();
 
@@ -44,12 +40,7 @@ adminRoutes.post("/staff", staffAdd);
 adminRoutes.get("/staff", getStaff);
 adminRoutes.get("/staff/:email", staffByname);
 adminRoutes.put("/staff/:email", updateStaff);
-
-// expense Management
-adminRoutes.post("/expense", addExpense);
-adminRoutes.get("/expense", getExpense);
-
-// dashboard Management
-adminRoutes.get("/dashboard/expense", expenseDashBoard);
-adminRoutes.get("/dashboard/fee", feeDashBoard);
+// Expense tracker
+adminRoutes.post("/expenses", addTrascation);
+adminRoutes.get("/totat-income", totalIncome);
 export default adminRoutes;
