@@ -21,6 +21,11 @@ import {
   incomeByCategory,
   incomeBymonth,
   incomeByWeek,
+} from "../controllers/expenseController/income.controller";
+import {
+  expenseByCategory,
+  expenseBymonth,
+  expenseByWeek,
 } from "../controllers/expenseController/expense.controller";
 
 const adminRoutes = Router();
@@ -47,4 +52,7 @@ adminRoutes.post("/expenses", addTrascation);
 adminRoutes.get("/income-by-category", incomeByCategory);
 adminRoutes.get("/income-by-week", incomeByWeek);
 adminRoutes.get("/income-by-month", incomeBymonth);
+adminRoutes.get("/expense-by-category", expenseByCategory);
+adminRoutes.get("/expense-by-week", expenseByWeek);
+adminRoutes.get("/expense-by-month", expenseBymonth);
 export default adminRoutes;

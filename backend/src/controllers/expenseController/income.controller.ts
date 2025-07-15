@@ -3,6 +3,8 @@ import prisma from "../../config/db";
 import { expenseSchema } from "../../zod";
 import { date } from "zod";
 import { stat } from "fs";
+import { json } from "body-parser";
+import { matchesGlob } from "path";
 
 export const addTrascation = async (
   req: Request,
@@ -39,6 +41,33 @@ export const addTrascation = async (
     });
   }
 };
+export const totalIncome = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const income = await prisma.expenseTracker.findMany({
+      where: {
+        type: "Income",
+      },
+    });
+    if (!income) {
+      res.json({
+        msg: "Not have any income ",
+      });
+    }
+    const totalIncome = income.reduce((sum, item) => sum + item.amount, 0);
+    res.status(202).json({
+      msg: "Total income ",
+      totalIncome,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(503).json({
+      msg: " some error is occured",
+    });
+  }
+};
 
 export const incomeByCategory = async (
   req: Request,
@@ -54,6 +83,11 @@ export const incomeByCategory = async (
         amount: true,
       },
     });
+    if (!incomeByCategory) {
+      res.json({
+        msg: " not income by this category",
+      });
+    }
     res.status(202).json({
       msg: `Total Income is ${incomeByCategory}`,
     });
@@ -76,7 +110,7 @@ export const incomeByWeek = async (
     const weekStart = startOfWeek(today, { weekStartsOn: 1 }); // Monday
     const weekEnd = endOfWeek(today, { weekStartsOn: 1 }); // Sunday
 
-    const incomes = await prisma.expenseTracker.findMany({
+    const income = await prisma.expenseTracker.findMany({
       where: {
         date: {
           gte: weekStart,
@@ -86,7 +120,7 @@ export const incomeByWeek = async (
       },
     });
 
-    const totalIncome = incomes.reduce((sum, item) => sum + item.amount, 0);
+    const totalIncome = income.reduce((sum, item) => sum + item.amount, 0);
 
     res.status(200).json({
       weekStart: weekStart.toISOString(),
