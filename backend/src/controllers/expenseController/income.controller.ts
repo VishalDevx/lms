@@ -4,23 +4,60 @@ import { expenseSchema } from "../../zod";
 import { date } from "zod";
 import { stat } from "fs";
 
-export const expenseByCategory = async (
+export const addTrascation = async (
   req: Request,
   res: Response
 ): Promise<void> => {
   try {
-    const expenseByCategory = await prisma.expenseTracker.groupBy({
+    const validateData = expenseSchema.parse(req.body);
+
+    const validTypes = ["INCOME", "EXPENSE"];
+
+    if (
+      !validateData.type ||
+      !validTypes.includes(validateData.type.toUpperCase())
+    ) {
+      res.status(400).json({
+        msg: "Invalid 'type' provided. It must be either 'INCOME' or 'EXPENSE'.",
+      });
+      return;
+    }
+    const trasaction = await prisma.expenseTracker.create({
+      data: {
+        ...validateData,
+        type: validateData.type === "INCOME" ? "Income" : "Expense",
+      },
+    });
+    res.status(200).json({
+      msg: " Trascation added successFully",
+      trasaction,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      msg: " You are give the invalide information ",
+    });
+  }
+};
+
+export const incomeByCategory = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const incomeByCategory = await prisma.expenseTracker.groupBy({
       by: ["category"],
       where: {
-        type: "Expense",
+        type: "Income",
       },
       _sum: {
         amount: true,
       },
     });
     res.status(202).json({
-      msg: `Total Income is ${expenseByCategory}`,
+      msg: `Total Income is ${incomeByCategory}`,
     });
+    console.log(incomeByCategory);
   } catch (error) {
     console.error(error);
     res.status(500).json({
@@ -29,7 +66,7 @@ export const expenseByCategory = async (
   }
 };
 
-export const expenseByWeek = async (
+export const incomeByWeek = async (
   req: Request,
   res: Response
 ): Promise<any> => {
@@ -39,22 +76,22 @@ export const expenseByWeek = async (
     const weekStart = startOfWeek(today, { weekStartsOn: 1 }); // Monday
     const weekEnd = endOfWeek(today, { weekStartsOn: 1 }); // Sunday
 
-    const expense = await prisma.expenseTracker.findMany({
+    const incomes = await prisma.expenseTracker.findMany({
       where: {
         date: {
           gte: weekStart,
           lte: weekEnd,
         },
-        type: "Expense", // Adjust based on your DB schema
+        type: "Income", // Adjust based on your DB schema
       },
     });
 
-    const totalExpense = expense.reduce((sum, item) => sum + item.amount, 0);
+    const totalIncome = incomes.reduce((sum, item) => sum + item.amount, 0);
 
     res.status(200).json({
       weekStart: weekStart.toISOString(),
       weekEnd: weekEnd.toISOString(),
-      totalExpense,
+      totalIncome,
     });
   } catch (error) {
     console.error("Error fetching weekly income:", error);
@@ -82,7 +119,7 @@ function endOfWeek(date: Date, options: { weekStartsOn: number }): Date {
   return end;
 }
 
-export const expenseBymonth = async (
+export const incomeBymonth = async (
   req: Request,
   res: Response
 ): Promise<any> => {
@@ -90,22 +127,22 @@ export const expenseBymonth = async (
     const today = new Date();
     const monthStart = startOfMonth(today);
     const monthEnd = endOfMonth(today);
-    const expense = await prisma.expenseTracker.findMany({
+    const income = await prisma.expenseTracker.findMany({
       where: {
         date: {
           gte: monthStart,
           lte: monthEnd,
         },
-        type: "Expense",
+        type: "Income",
       },
     });
-    const totalExpense = expense.reduce((sum, item) => sum + item.amount, 0);
+    const totalIncome = income.reduce((sum, item) => sum + item.amount, 0);
 
     res.status(200).json({
       monthStart: monthStart.toISOString(),
       monthEnd: monthEnd.toISOString(),
-      totalExpense,
-      records: expense,
+      totalIncome,
+      records: income,
     });
   } catch (error) {
     console.error(error);

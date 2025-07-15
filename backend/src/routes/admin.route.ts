@@ -18,7 +18,9 @@ import {
 } from "../controllers/staffController/manageStaff.controller";
 import {
   addTrascation,
-  totalIncome,
+  incomeByCategory,
+  incomeBymonth,
+  incomeByWeek,
 } from "../controllers/expenseController/expense.controller";
 
 const adminRoutes = Router();
@@ -42,5 +44,7 @@ adminRoutes.get("/staff/:email", staffByname);
 adminRoutes.put("/staff/:email", updateStaff);
 // Expense tracker
 adminRoutes.post("/expenses", addTrascation);
-adminRoutes.get("/totat-income", totalIncome);
+adminRoutes.get("/income-by-category", incomeByCategory);
+adminRoutes.get("/income-by-week", incomeByWeek);
+adminRoutes.get("/income-by-month", incomeBymonth);
 export default adminRoutes;
