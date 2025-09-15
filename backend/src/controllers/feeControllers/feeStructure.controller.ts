@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import prisma from "../../config/db";
 
-import { FeeStatus } from "@prisma/client";
-import { feeStructureSchema, studentFeeSchema } from "@vishaldevsx/lms-common";
+
+import { FeeStatusEnum, feeStructureSchema } from "../../zod"
 
 export const assignFee = async (req: Request, res: Response): Promise<any> => {
   try {
@@ -27,13 +27,13 @@ export const assignFee = async (req: Request, res: Response): Promise<any> => {
     }
 
     // Step 4: Prepare StudentFee records for each student
-    const studentFees = students.map((student) => ({
+    const studentFees = students.map((student: { id: any; }) => ({
       studentId: student.id,
       feeStructureId: feeStructure.id,
       paidAmount: 0,
       dueAmount: validatedData.amount,
       dueDate: validatedData.month,
-      status: FeeStatus.PENDING,
+      status: FeeStatusEnum.enum.PENDING,
     }));
 
     // Step 5: Bulk create all studentFee entries

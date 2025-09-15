@@ -1,8 +1,6 @@
 import { Request, Response } from "express";
 import prisma from "../../config/db";
 import { expenseSchema } from "../../zod";
-import { date } from "zod";
-import { stat } from "fs";
 
 export const expenseByCategory = async (
   req: Request,
@@ -12,7 +10,7 @@ export const expenseByCategory = async (
     const expenseByCategory = await prisma.expenseTracker.groupBy({
       by: ["category"],
       where: {
-        type: "Expense",
+        type: "DEBIT",
       },
       _sum: {
         amount: true,
@@ -45,11 +43,11 @@ export const expenseByWeek = async (
           gte: weekStart,
           lte: weekEnd,
         },
-        type: "Expense", // Adjust based on your DB schema
+        type: "DEBIT", // Adjust based on your DB schema
       },
     });
 
-    const totalExpense = expense.reduce((sum, item) => sum + item.amount, 0);
+    const totalExpense = expense.reduce((sum: any, item: { amount: any; }) => sum + item.amount, 0);
 
     res.status(200).json({
       weekStart: weekStart.toISOString(),
@@ -96,10 +94,10 @@ export const expenseBymonth = async (
           gte: monthStart,
           lte: monthEnd,
         },
-        type: "Expense",
+        type: "DEBIT",
       },
     });
-    const totalExpense = expense.reduce((sum, item) => sum + item.amount, 0);
+    const totalExpense = expense.reduce((sum: any, item: { amount: any; }) => sum + item.amount, 0);
 
     res.status(200).json({
       monthStart: monthStart.toISOString(),

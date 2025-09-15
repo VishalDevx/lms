@@ -1,7 +1,8 @@
-import React from "react";
-import Auth from "../components/Auth";
-const SignIn = () => {
-  return <Auth type="signin" />;
-};
+// import React from "react";
+// import Auth from "../components/Auth";
+// const SignIn = () => {
+//   return <Auth type="signin" />;
+// };
 
-export default SignIn;
+// export default SignIn;
+// // 

@@ -1,10 +1,7 @@
 import { Request, Response } from "express";
 import prisma from "../../config/db";
 import { expenseSchema } from "../../zod";
-import { date } from "zod";
-import { stat } from "fs";
-import { json } from "body-parser";
-import { matchesGlob } from "path";
+
 
 export const addTrascation = async (
   req: Request,
@@ -13,7 +10,7 @@ export const addTrascation = async (
   try {
     const validateData = expenseSchema.parse(req.body);
 
-    const validTypes = ["INCOME", "EXPENSE"];
+    const validTypes = ["CREDIT", "DEBIT"];
 
     if (
       !validateData.type ||
@@ -27,7 +24,7 @@ export const addTrascation = async (
     const trasaction = await prisma.expenseTracker.create({
       data: {
         ...validateData,
-        type: validateData.type === "INCOME" ? "Income" : "Expense",
+        type: validateData.type === "CREDIT" ? "CREDIT" : "DEBIT",
       },
     });
     res.status(200).json({
@@ -48,7 +45,7 @@ export const totalIncome = async (
   try {
     const income = await prisma.expenseTracker.findMany({
       where: {
-        type: "Income",
+        type: "CREDIT",
       },
     });
     if (!income) {
@@ -56,7 +53,7 @@ export const totalIncome = async (
         msg: "Not have any income ",
       });
     }
-    const totalIncome = income.reduce((sum, item) => sum + item.amount, 0);
+    const totalIncome = income.reduce((sum: any, item: { amount: any; }) => sum + item.amount, 0);
     res.status(202).json({
       msg: "Total income ",
       totalIncome,
@@ -77,7 +74,7 @@ export const incomeByCategory = async (
     const incomeByCategory = await prisma.expenseTracker.groupBy({
       by: ["category"],
       where: {
-        type: "Income",
+        type: "CREDIT",
       },
       _sum: {
         amount: true,
@@ -116,11 +113,11 @@ export const incomeByWeek = async (
           gte: weekStart,
           lte: weekEnd,
         },
-        type: "Income", // Adjust based on your DB schema
+        type: "CREDIT", // Adjust based on your DB schema
       },
     });
 
-    const totalIncome = income.reduce((sum, item) => sum + item.amount, 0);
+    const totalIncome = income.reduce((sum: any, item: { amount: any; }) => sum + item.amount, 0);
 
     res.status(200).json({
       weekStart: weekStart.toISOString(),
@@ -167,10 +164,10 @@ export const incomeBymonth = async (
           gte: monthStart,
           lte: monthEnd,
         },
-        type: "Income",
+        type: "CREDIT",
       },
     });
-    const totalIncome = income.reduce((sum, item) => sum + item.amount, 0);
+    const totalIncome = income.reduce((sum: any, item: { amount: any; }) => sum + item.amount, 0);
 
     res.status(200).json({
       monthStart: monthStart.toISOString(),

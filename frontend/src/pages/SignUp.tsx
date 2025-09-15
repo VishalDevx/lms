@@ -1,8 +1,8 @@
-import React from "react";
-import Auth from "../components/Auth";
+// import React from "react";
+// import Auth from "../components/Auth";
 
-const SignUp = () => {
-  return <Auth type="signup" />;
-};
+// const SignUp = () => {
+//   return <Auth type="signup" />;
+// };
 
-export default SignUp;
+// export default SignUp;

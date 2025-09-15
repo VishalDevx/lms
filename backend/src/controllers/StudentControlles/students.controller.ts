@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 
 import prisma from "../../config/db";
-import { studentSchema } from "@vishaldevsx/lms-common";
+import { studentSchema } from "../../zod";
 import { ZodError } from "zod";
 export const addStudent = async (req: Request, res: Response): Promise<any> => {
   try {
@@ -126,7 +126,7 @@ export const studentByRollnumber = async (
       include: {
         StudentFee: {
           include: {
-            FeeStructure: true, // to get details of the fee assigned
+           
             payments: true, // if you also want payment history
           },
         },

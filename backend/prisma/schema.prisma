@@ -112,8 +112,8 @@ model ExpenseTracker {
 
 
 enum  TransactionType {
-  Income
-  Expense
+  CREDIT
+  DEBIT
 }
 
 enum PaymentGateway {

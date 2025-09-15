@@ -1,6 +1,6 @@
-import { Router } from "express";
-import { createOrder } from "../controllers/paymentControllers/createOrder.controller";
+// import { Router } from "express";
+// import { createOrder } from "../controllers/paymentControllers/createOrder.controller";
 
-const paymentRoutes = Router();
-paymentRoutes.post("/create-order", createOrder);
-export default paymentRoutes;
+// const paymentRoutes = Router();
+// paymentRoutes.post("/create-order", createOrder);
+// export default paymentRoutes;

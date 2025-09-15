@@ -26,7 +26,7 @@ export const getStudentFees = async (
 
     return res.status(200).json({
       message: "Fees fetched successfully",
-      data: fees.map((fee) => ({
+      data: fees.map((fee: { FeeStructure: { name: any; month: any; }; dueDate: any; paidAmount: any; dueAmount: any; status: any; }) => ({
         feeName: fee.FeeStructure.name,
         month: fee.FeeStructure.month,
         dueDate: fee.dueDate,
