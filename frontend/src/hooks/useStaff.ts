@@ -12,9 +12,16 @@ export const useAddStaff = ()=>{
         }
     })
 }
-export const useStaff =()=>{
-useQuery({queryKey:["staff"],queryFn:getStaff})
-}
+export const useStaff = () => {
+  return useQuery({
+    queryKey: ["all","staff"],
+    queryFn: async () => {
+      const res = await getStaff();
+      return res.data;
+    }
+  });
+};
+
 export const useUpdateStaff = ()=>{
     return useMutation({
         mutationFn: ({ email, data }: { email: string; data: StaffType }) =>

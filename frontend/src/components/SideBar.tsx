@@ -9,7 +9,7 @@ import {
   Fingerprint,
   BanknoteArrowDown,
   LogOut,
-  Menu,
+  Menu, // hamburger icon
 } from "lucide-react";
 
 const navItems = [
@@ -23,7 +23,11 @@ const navItems = [
   { to: "/logout", label: "Logout", icon: <LogOut /> },
 ];
 
-const SideBar: React.FC = () => {
+interface SideBarProps {
+  onItemClick: () => void;
+}
+
+const SideBar: React.FC<SideBarProps> = ({ onItemClick }) => {
   const [collapsed, setCollapsed] = useState(false);
 
   return (
@@ -49,6 +53,7 @@ const SideBar: React.FC = () => {
           <NavLink
             key={item.to}
             to={item.to}
+            onClick={onItemClick}
             className={({ isActive }) =>
               `flex items-center gap-2 p-2 rounded-md ${
                 isActive

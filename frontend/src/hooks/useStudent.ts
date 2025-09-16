@@ -26,7 +26,7 @@ export const useAllStudent = () => {
     queryKey: ["all", "student"],
     queryFn: async () => {
       const res = await getALlStudent();
-      return res.data; // ✅ return only the array
+      return res.data; 
     },
   });
 };
