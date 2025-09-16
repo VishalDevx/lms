@@ -21,7 +21,11 @@ const navItems = [
   { to: "/logout", label: "Logout", icon: <LogOut /> },
 ];
 
-const SideBar = () => {
+interface SideBarProps {
+  onItemClick: () => void;
+}
+
+const SideBar: React.FC<SideBarProps> = ({ onItemClick }) => {
   return (
     <div className="w-64 h-screen bg-black sticky top-0">
       <div className="p-4 text-white text-xl font-bold border-b border-gray-700">
@@ -32,6 +36,7 @@ const SideBar = () => {
           <NavLink
             key={item.to}
             to={item.to}
+            onClick={onItemClick} // <-- call the handler on click
             className={({ isActive }) =>
               `flex items-center gap-2 p-2 rounded-md ${
                 isActive

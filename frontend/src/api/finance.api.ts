@@ -1,0 +1,29 @@
+import axiosInstance from "../services/axiosInstance";
+import { ExpenseFormType,expenseSchema } from "../types/zod";
+export const addTrascation = async (data : ExpenseFormType) =>{
+    const parsed = expenseSchema.parse(data)
+    // backend my not accept it direct so convert into ISO string 
+    const payload = {
+        ...parsed,
+        date : parsed.date.toISOString()
+
+    }
+    return axiosInstance.post('/admin/expenses',payload)
+}
+export const getIncomeByCategory = () =>{
+    return axiosInstance.get("/admin/income-by-category")}
+export const getIncomeByWeek  = () =>{
+    return axiosInstance.get("/admin/income-by-week")
+}
+export const getIncomeByMonth = () =>{
+    return axiosInstance.get("/admin/income-by-month")
+}
+export const getExpenseByCategory = () =>{
+    return axiosInstance.get("/admin/expense-by-category")
+}
+export const getExpenseByWeek = () =>{
+    return axiosInstance.get("/admin/expense-by-week")
+}
+export const getExpenseByMonth = ()=>{
+    return axiosInstance.get("/admin/expense-by-month")
+}

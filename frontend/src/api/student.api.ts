@@ -1,16 +1,21 @@
-import { data } from "react-router-dom";
+
 import axiosInstance from "../services/axiosInstance";
+import { studentSchema, StudentType } from "../types/zod";
 export const getALlStudent = () => {
-  return axiosInstance.get("/api/v1/admin/students");
+  return axiosInstance.get("/admin/students");
 };
 export const getStudentByRoll = (rollNumber: string) => {
-  return axiosInstance.get(`/api/v1/admin/students/${rollNumber}`);
+  return axiosInstance.get(`/admin/students/${rollNumber}`);
 };
 
-export const addStudent = () => {
-  return axiosInstance.post("/api/v1/admin/students", data);
+export const addStudent = async (data:StudentType) => {
+  const parsed = studentSchema.parse(data);
+  const payload = {
+    ...parsed,
+  }
+  return axiosInstance.post("/admin/students",payload);
 };
 
-export const updateStudent = (rollNumber: string, data: any) => {
-  return axiosInstance.put(`/api/v1/admin/${rollNumber}`, data);
+export const updateStudent = (rollNumber: string, data: StudentType) => {
+  return axiosInstance.put(`/admin/${rollNumber}`, data);
 };
