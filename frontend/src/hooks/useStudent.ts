@@ -7,7 +7,7 @@ export const useAddStudent = () =>{
     return useMutation({
         mutationFn : (data:StudentType)=>addStudent(data),
         onSuccess:()=>{
-            queryClient.invalidateQueries({queryKey:["studetent"]})
+            queryClient.invalidateQueries({queryKey:["student"]})
         }
     })
 }
@@ -20,10 +20,16 @@ export const useStudentByRollNumber = (rollNumber: string) =>
     },
     enabled: !!rollNumber, 
   });
-export const useAllStudent = ()=>{
-    useQuery({queryKey:["all","student"],queryFn:getALlStudent})
-}
 
+export const useAllStudent = () => {
+  return useQuery({
+    queryKey: ["all", "student"],
+    queryFn: async () => {
+      const res = await getALlStudent();
+      return res.data; // ✅ return only the array
+    },
+  });
+};
 export const useUpdateStudent = () => {
   return useMutation({
     mutationFn: ({ rollNumber, data }: { rollNumber: string; data: StudentType }) =>

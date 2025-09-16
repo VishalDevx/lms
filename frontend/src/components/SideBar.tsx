@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import {
   ChartPie,
@@ -8,6 +9,7 @@ import {
   Fingerprint,
   BanknoteArrowDown,
   LogOut,
+  Menu,
 } from "lucide-react";
 
 const navItems = [
@@ -21,22 +23,32 @@ const navItems = [
   { to: "/logout", label: "Logout", icon: <LogOut /> },
 ];
 
-interface SideBarProps {
-  onItemClick: () => void;
-}
+const SideBar: React.FC = () => {
+  const [collapsed, setCollapsed] = useState(false);
 
-const SideBar: React.FC<SideBarProps> = ({ onItemClick }) => {
   return (
-    <div className="w-64 h-screen bg-black sticky top-0">
-      <div className="p-4 text-white text-xl font-bold border-b border-gray-700">
-        RGD School
+    <div
+      className={`h-screen bg-black sticky top-0 transition-all duration-300 ${
+        collapsed ? "w-16" : "w-64"
+      }`}
+    >
+      {/* Header with hamburger */}
+      <div className="flex items-center justify-between p-4 border-b border-gray-700 text-white">
+        {!collapsed && <span className="text-xl font-bold">RGD School</span>}
+        <button
+          onClick={() => setCollapsed(!collapsed)}
+          className="p-2 rounded hover:bg-gray-700"
+        >
+          <Menu />
+        </button>
       </div>
+
+      {/* Navigation */}
       <nav className="flex flex-col p-4 gap-4">
         {navItems.map((item) => (
           <NavLink
             key={item.to}
             to={item.to}
-            onClick={onItemClick} // <-- call the handler on click
             className={({ isActive }) =>
               `flex items-center gap-2 p-2 rounded-md ${
                 isActive
@@ -46,7 +58,7 @@ const SideBar: React.FC<SideBarProps> = ({ onItemClick }) => {
             }
           >
             {item.icon}
-            {item.label}
+            {!collapsed && item.label}
           </NavLink>
         ))}
       </nav>

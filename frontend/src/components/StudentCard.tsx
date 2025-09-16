@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { getALlStudent } from "../api/student.api";
-import { StudentType } from "@vishaldevsx/lms-common";
+import { StudentType } from "../types/zod";
 import { Link } from "react-router-dom";
 
 const StudentTable = () => {
