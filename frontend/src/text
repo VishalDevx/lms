@@ -1,0 +1,45 @@
+1. Primary (Blue → #3B82F6 / blue-500)
+
+Buttons (Add, Edit)
+
+Links (<Link>)
+
+Highlights on charts (main line/bar color)
+
+Table headers background (blue-50)
+
+Input focus rings
+
+2. Secondary (Green → #34D399 / emerald-400)
+
+Status badges (Active, Verified)
+
+Secondary chart lines (growth rate, pass % etc.)
+
+Positive metrics (+15%)
+
+Secondary buttons (View)
+
+3. Neutral (Gray Scale: gray-50 → gray-700)
+
+Sidebar background → gray-50 or white
+
+Page background → gray-50
+
+Card background → white
+
+Border separators → gray-200
+
+Titles → gray-700
+
+Body text → gray-500
+
+4. Danger (Rose → #F43F5E / rose-500)
+
+Delete actions
+
+Error messages / validation
+
+Negative chart values (expenses, dropout rates)
+
+Alert badges

@@ -31,6 +31,11 @@ export const staffAdd = async (req: Request, res: Response): Promise<void> => {
 export const getStaff = async (req: Request, res: Response): Promise<void> => {
   try {
     const getStaff = await prisma.staff.findMany();
+    if(getStaff.length===0){
+      res.status(201).json({
+        msg :' Not register the any staff member on it '
+      })
+    }
     res.status(201).json(getStaff);
   } catch (error) {
     console.error(error);

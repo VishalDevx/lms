@@ -27,12 +27,15 @@ export const useAddTransaction = () => {
 export const useIncomeByCategory = () =>
   useQuery({ queryKey: ["income", "category"], queryFn: getIncomeByCategory });
 
-export const useIncomeByWeek = () =>
-  useQuery({ queryKey: ["income", "week"], queryFn: getIncomeByWeek });
+export const useIncomeByWeek =  () =>
+ useQuery({ queryKey: ["income", "week"], queryFn: getIncomeByWeek });
 
-export const useIncomeByMonth = () =>
-  useQuery({ queryKey: ["income", "month"], queryFn: getIncomeByMonth });
-
+export const useIncomeByMonth = () =>{
+  return useQuery({ queryKey: ["income", "month"], queryFn : async ()=>{
+    const res = await getIncomeByMonth()
+return res.data
+  } });
+}
 // 🔹 Expense queries
 export const useExpenseByCategory = () =>
   useQuery({ queryKey: ["expense", "category"], queryFn: getExpenseByCategory });
@@ -40,5 +43,8 @@ export const useExpenseByCategory = () =>
 export const useExpenseByWeek = () =>
   useQuery({ queryKey: ["expense", "week"], queryFn: getExpenseByWeek });
 
-export const useExpenseByMonth = () =>
-  useQuery({ queryKey: ["expense", "month"], queryFn: getExpenseByMonth });
+export const useExpenseByMonth = () =>{
+ return  useQuery({ queryKey: ["expense", "month"], queryFn:  async ()=>{
+  const res = await getExpenseByMonth();
+  return res.data
+ } });}
