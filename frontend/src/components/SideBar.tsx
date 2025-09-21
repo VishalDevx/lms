@@ -14,7 +14,7 @@ import {
 
 const navItems = [
   { to: "/dashboard", label: "Dashboard", icon: <ChartPie /> },
-  { to: "/getAllStudent", label: "Students", icon: <Users /> },
+  { to: "/student/class", label: "Students", icon: <Users /> },
   { to: "/staff", label: "Teacher", icon: <UserPen /> },
   { to: "/fee-management", label: "Fee Management", icon: <HandCoins /> },
   { to: "/result", label: "Results", icon: <BookCheck /> },

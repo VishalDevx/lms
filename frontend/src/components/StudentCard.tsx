@@ -1,34 +1,91 @@
-import { useEffect, useState } from "react";
-import { getALlStudent } from "../api/student.api";
 import { StudentType } from "../types/zod";
-import { Link } from "react-router-dom";
 import { useAllStudent } from "../hooks/useStudent";
 import Loading from "./Loading";
+import { Link } from "react-router-dom";
 
-const StudentTable = () => {
+const GroupedByClass = () => {
   const {
     data: studentData,
     isLoading: studentLoading,
-    error: studentError
+    error: studentError,
   } = useAllStudent();
 
-  if (studentLoading) {
-    return <Loading />;
-  }
-
-  if (studentError) {
+  if (studentLoading) return <Loading />;
+  if (studentError)
     return (
-      <div>
-        Some error occurred
+      <div className="p-6 text-center text-red-500 font-medium">
+        Some error occurred while fetching students
       </div>
     );
-  }
+
+  // group students class-wise
+  const groupedByClass: Record<string, StudentType[]> =
+    studentData?.reduce((acc: Record<string, StudentType[]>, student: StudentType) => {
+      const grade = student.grade || "Unassigned";
+      if (!acc[grade]) acc[grade] = [];
+      acc[grade].push(student);
+      return acc;
+    }, {}) || {};
+
+  // helper to get unique subjects in a class
+  const getSubjects = (students: StudentType[]) => {
+    const subjects = students.map(s => s.subject);
+    return [...new Set(subjects)].join(", ");
+  };
 
   return (
-    <div>
-      hello world
+    <div className="p-6">
+      <h1 className="text-2xl font-bold text-gray-800 mb-2">Students by Class</h1>
+      <p className="text-gray-600 mb-6">
+        Detailed overview of each class with total students, subjects, and actions.
+      </p>
+
+      <div className="overflow-x-auto shadow-lg sm:rounded-lg border border-gray-200">
+        <table className="min-w-full text-sm text-left text-gray-600">
+          <thead className="text-xs text-gray-700 uppercase bg-blue-50">
+            <tr>
+              <th className="px-6 py-3">Grade</th>
+              <th className="px-6 py-3">Total Students</th>
+              <th className="px-6 py-3 hidden md:table-cell">Subjects</th>
+              <th className="px-6 py-3 hidden lg:table-cell">Average Age</th>
+              <th className="px-6 py-3">Action</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-200">
+            {Object.entries(groupedByClass).map(([grade, students]: [string, StudentType[]]) => {
+              const totalAge = students.reduce((sum, s) => sum + new Date().getFullYear() - new Date(s.dob).getFullYear(), 0);
+              const averageAge = Math.round(totalAge / students.length);
+
+              return (
+                <tr key={grade} className="bg-white hover:bg-gray-50 transition">
+                  <td className="px-6 py-4 font-medium text-gray-700">{grade}</td>
+                  <td className="px-6 py-4">{students.length}</td>
+                  <td className="px-6 py-4 hidden md:table-cell">{getSubjects(students)}</td>
+                  <td className="px-6 py-4 hidden lg:table-cell">{averageAge} yrs</td>
+                  <td className="px-6 py-4">
+                    <Link
+                      to={`/students/class/${grade}`}
+                      className="text-blue-600 hover:underline font-medium"
+                    >
+                      View Students
+                    </Link>
+                  </td>
+                </tr>
+              );
+            })}
+
+            {studentData?.length === 0 && (
+              <tr>
+                <td colSpan={5} className="px-6 py-10 text-center text-gray-500">
+                  🚀 No students found. Try adding some students to see them here.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };
 
-export default StudentTable;
+export default GroupedByClass;

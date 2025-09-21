@@ -21,6 +21,7 @@ model Student {
   motherName   String
   gender       Gender
   grade        Grade
+  dob DateTime
   address      String
   profilePic   String?
   rollNumber   String       @unique

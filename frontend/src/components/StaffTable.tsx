@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { useStaff } from "../hooks/useStaff";
 import { StaffType } from "../types/zod";
-import { FilePenLine, Trash2 } from "lucide-react";
+import { Eye, FilePenLine, Trash2 } from "lucide-react";
 
 const StaffTable = () => {
   const { data: staffData, isLoading: staffLoading, error: staffError } = useStaff();
@@ -104,7 +104,7 @@ const StaffTable = () => {
                     to={`/staff/${staff.email}`}
                     className="text-blue-600 hover:text-blue-800 font-medium"
                   >
-                    <FilePenLine />
+                  <Eye />
                   </Link>
                   <button className="text-rose-500 hover:text-rose-700 font-medium">
                     <Trash2 />
