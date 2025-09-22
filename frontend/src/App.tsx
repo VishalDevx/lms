@@ -2,7 +2,7 @@ import { Route, Routes } from "react-router-dom";
 import Layout from "./components/Layout";
 import GroupedByClass from "./components/GroupedByClass";
 import StudentView from "./admin-page/StudentView";
-import DashBoard from "./components/DashBoard";
+import DashBoard from "./admin-page/DashBoard";
 import StaffTable from "./components/StaffTable";
 import ClassStudentList from "./components/ClassStudentList";
 import StaffView from "./admin-page/StaffView";
