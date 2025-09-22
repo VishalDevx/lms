@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { useStaff } from "../hooks/useStaff";
 import { StaffType } from "../types/zod";
-import { Eye, FilePenLine, Trash2 } from "lucide-react";
+import { Eye,  Trash2 } from "lucide-react";
 
 const StaffTable = () => {
   const { data: staffData, isLoading: staffLoading, error: staffError } = useStaff();

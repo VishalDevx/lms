@@ -1,6 +1,6 @@
 import {  useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getStudentByRoll,addStudent,getALlStudent,updateStudent } from "../api/student.api";
-import { StudentType } from "../types/zod";
+import { studentSchema, StudentType } from "../types/zod";
 
 export const useAddStudent = () =>{
     const queryClient = useQueryClient()
@@ -11,14 +11,18 @@ export const useAddStudent = () =>{
         }
     })
 }
+
+
+
 export const useStudentByRollNumber = (rollNumber: string) =>
-  useQuery({
+  useQuery<StudentType>({
     queryKey: ["student", rollNumber],
-    queryFn: ({ queryKey }) => {
-      const [, rollNumber] = queryKey; 
-      return getStudentByRoll(rollNumber as string);
+    queryFn: async () => {
+      const response = await getStudentByRoll(rollNumber);
+      // Validate API response with Zod
+      return studentSchema.parse(response.data);
     },
-    enabled: !!rollNumber, 
+    enabled: !!rollNumber,
   });
 
 export const useAllStudent = () => {

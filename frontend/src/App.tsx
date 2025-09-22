@@ -1,10 +1,12 @@
 import { Route, Routes } from "react-router-dom";
 import Layout from "./components/Layout";
-import GroupedByClass from "./components/StudentCard";
-import StudentDetails from "./admin-page/StudentInfo";
+import GroupedByClass from "./components/GroupedByClass";
+import StudentView from "./admin-page/StudentView";
 import DashBoard from "./components/DashBoard";
 import StaffTable from "./components/StaffTable";
 import ClassStudentList from "./components/ClassStudentList";
+import StaffView from "./admin-page/StaffView";
+import Expense from "./admin-page/Expense";
 
 function App() {
   return (
@@ -15,8 +17,10 @@ function App() {
         <Route path="dashboard" element={<DashBoard />} />
         <Route path="student/class" element={<GroupedByClass />} />
         <Route path="students/class/:grade" element={<ClassStudentList />} />
-        <Route path="students/:rollNumber" element={<StudentDetails />} />
+        <Route path="students/:rollNumber" element={<StudentView />} />
+        <Route path="staff/:email" element={<StaffView/>}/>
         <Route path="staff" element={<StaffTable />} />
+        <Route path="/expsense" element={<Expense/>}/>
         {/* Add more routes here if needed */}
       </Route>
     </Routes>

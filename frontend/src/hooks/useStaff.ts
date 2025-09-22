@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { addStaff,getStaff,updateStaff } from "../api/staff.api";
+import { addStaff,getStaff,updateStaff,getByName } from "../api/staff.api";
 
-import { StaffType } from "../types/zod";
+import { staffSchema, StaffType } from "../types/zod";
 
 export const useAddStaff = ()=>{
     const queryClient = useQueryClient();
@@ -22,6 +22,16 @@ export const useStaff = () => {
   });
 };
 
+export const useStaffByName = (email: string) => {
+  return useQuery<StaffType>({
+    queryKey: ["staff", email],
+    queryFn: async () => {
+      const res = await getByName(email);
+      return staffSchema.parse(res.data); // validates response
+    },
+    enabled: !!email, // only fetch if email exists
+  });
+};
 export const useUpdateStaff = ()=>{
     return useMutation({
         mutationFn: ({ email, data }: { email: string; data: StaffType }) =>
