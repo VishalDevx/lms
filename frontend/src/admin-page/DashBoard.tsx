@@ -1,3 +1,4 @@
+
 import {
   useExpenseByMonth,
   useIncomeByMonth,
@@ -11,12 +12,22 @@ const DashBoard = () => {
   if (expenseLoading || incomeLoading) return <div className="p-4">Loading...</div>;
   if (expenseError || incomeError) return <div className="p-4 text-red-500">Error fetching data</div>;
 
-const totalIncomeOfYear = incomeByMonthData?.totalIncome ?? 0;
-const totalExpenseOfYear = expenseByMonthData?.totalExpense ?? 0;
-const balance = totalIncomeOfYear - totalExpenseOfYear;
- 0;
+   
+
+const year = new Date().getFullYear();
+
+const totalIncomeOfYear =
+  incomeByMonthData?.records
+    ?.filter((r: { date: string | number | Date; }) => new Date(r.date).getFullYear() === year)
+    .reduce((sum: any, r: { amount: any; }) => sum + (r.amount ?? 0), 0) ?? 0;
+
+const totalExpenseOfYear =
+  expenseByMonthData?.records
+    ?.filter((r: { date: string | number | Date; }) => new Date(r.date).getFullYear() === year)
+    .reduce((sum: any, r: { amount: any; }) => sum + (r.amount ?? 0), 0) ?? 0;
 
 
+const yearBalance = totalIncomeOfYear-totalExpenseOfYear;
   const greeting = getGreeting();
 
   return (
@@ -34,14 +45,12 @@ const balance = totalIncomeOfYear - totalExpenseOfYear;
       <h2 className="text-lg font-semibold mb-2 text-green-700">Total Income (Year)</h2>
       <p className="text-2xl font-bold text-green-600">₹{totalIncomeOfYear.toLocaleString()}</p>
     </div>
-
-
-    {/* Balance */}<div className="bg-blue-50 hover:bg-blue-100 rounded-xl p-6 shadow-lg transition-all">
-      <h2 className="text-lg font-semibold mb-2 text-blue-700">Balance</h2>
-      <p className={`text-2xl font-bold ${balance >= 0 ? "text-blue-600" : "text-gray-800"}`}>₹{balance.toLocaleString()}</p>
-    
+    {/* balance */}
+<div className="bg-blue-50 hover:bg-blue-100 rounded-xl p-6 shadow-lg transition-all">
+      <h2 className="text-lg font-semibold mb-2 text-blue-700">Balance(Year)</h2>
+      <p className="text-2xl font-bold text-blue-600">₹{yearBalance.toLocaleString()}</p>
     </div>
-    {/* Total Expense */}
+
     <div className="bg-red-50 hover:bg-red-100 rounded-xl p-6 shadow-lg transition-all">
       <h2 className="text-lg font-semibold mb-2 text-red-700">Total Expense (Year)</h2>
       <p className="text-2xl font-bold text-red-600">₹{totalExpenseOfYear.toLocaleString()}</p>

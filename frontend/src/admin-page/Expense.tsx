@@ -1,5 +1,5 @@
 import { useExpenseByCategory } from "../hooks/useFinance";
-import { ExpenseFormType } from "../types/zod";
+
 
 const Expense = ()=>{
     const {data:expenseData,isLoading:expenseLoading,error:expenseError} = useExpenseByCategory();
@@ -17,7 +17,7 @@ if(!expenseData){
 }
 return (
     <div>
-        hello
+      <header><div></div></header>
     </div>
 )
 }

@@ -21,11 +21,13 @@ import {
   incomeByCategory,
   incomeBymonth,
   incomeByWeek,
+  incomeByYear,
 } from "../controllers/expenseController/income.controller";
 import {
   expenseByCategory,
   expenseBymonth,
   expenseByWeek,
+  expenseByYear,
 } from "../controllers/expenseController/expense.controller";
 
 const adminRoutes = Router();
@@ -55,4 +57,6 @@ adminRoutes.get("/income-by-month", incomeBymonth);
 adminRoutes.get("/expense-by-category", expenseByCategory);
 adminRoutes.get("/expense-by-week", expenseByWeek);
 adminRoutes.get("/expense-by-month", expenseBymonth);
+adminRoutes.get("/expense/year",expenseByYear);
+adminRoutes.get("/income/year",incomeByYear)
 export default adminRoutes;

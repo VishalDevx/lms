@@ -126,3 +126,52 @@ function endOfMonth(date: Date): Date {
   end.setHours(23, 59, 59, 999);
   return end;
 }
+
+
+
+export const expenseByYear = async (
+  req: Request,
+  res: Response
+): Promise<any> => {
+  try {
+    const today = new Date();
+    const yearStart = startOfYear(today);
+    const yearEnd = endOfYear(today);
+    const expense = await prisma.expenseTracker.findMany({
+      where: {
+        date: {
+          gte: yearStart,
+          lte: yearEnd,
+        },
+        type: "DEBIT",
+      },
+    });
+    const totalExpense = expense.reduce((sum: any, item: { amount: any; }) => sum + item.amount, 0);
+
+    res.status(200).json({
+      monthStart: yearStart.toISOString(),
+      monthEnd: yearEnd.toISOString(),
+      totalExpense,
+      records: expense,
+    });
+  } catch (error) {
+    console.error(error);
+
+    res.status(503).json({
+      msg: "Errror in the month income",
+    });
+  }
+};
+
+// helper to get the first day to month
+function startOfYear(date: Date): Date {
+  const start = new Date(date.getFullYear(),  1);
+  start.setHours(0, 0, 0, 0);
+  return start;
+}
+// helper to get the last day to month
+function endOfYear(date: Date): Date {
+  const end = new Date(date.getFullYear(), 0);
+  end.setHours(23, 59, 59, 999);
+  return end;
+}

@@ -196,3 +196,40 @@ function endOfMonth(date: Date): Date {
   end.setHours(23, 59, 59, 999);
   return end;
 }
+
+
+export const incomeByYear = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const today = new Date();
+    const yearStart = startOfYear(today);
+    const yearEnd = endOfYear(today);
+
+    const result = await prisma.expenseTracker.aggregate({
+      _sum: { amount: true },
+      where: {
+        date: { gte: yearStart, lte: yearEnd },
+        type: "CREDIT",
+      },
+    });
+
+    res.status(200).json({
+      yearStart: yearStart.toISOString(),
+      yearEnd: yearEnd.toISOString(),
+      totalIncome: result._sum.amount ?? 0,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ msg: "Error fetching yearly income" });
+  }
+};
+function startOfYear(date: Date): Date {
+  const start = new Date(date.getFullYear(), 0, 1); // Jan 1st
+  start.setHours(0, 0, 0, 0);
+  return start;
+}
+
+function endOfYear(date: Date): Date {
+  const end = new Date(date.getFullYear(), 11, 31); // Dec 31st
+  end.setHours(23, 59, 59, 999);
+  return end;
+}
