@@ -1,6 +1,6 @@
 import { Link, useParams } from "react-router-dom";
 import { useAllStudent } from "../hooks/useStudent";
-import { Eye, FilePenLine, Trash2 } from "lucide-react";
+import { Eye,  Trash2 } from "lucide-react";
 import { StudentType } from "../types/zod";
 
 const ClassStudentList = () => {
@@ -15,7 +15,7 @@ const ClassStudentList = () => {
     studentData?.filter((student: StudentType) => student.grade === grade) || [];
 
   return (
-    <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+    <div className="relative overflow-x-auto shadow-md sm:rounded-lg bg-gray-50">
       {/* Header with search */}
       <div className="flex items-center justify-between flex-wrap gap-4 p-4 bg-gray-50">
         <h2 className="text-xl font-bold text-gray-800">{grade} Class List</h2>

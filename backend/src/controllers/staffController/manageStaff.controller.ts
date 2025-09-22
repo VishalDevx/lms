@@ -9,9 +9,10 @@ export const staffAdd = async (req: Request, res: Response): Promise<void> => {
       where: { email: validatedData.email },
     });
     if (existStaff) {
-      res.status(400).json({
+    res.status(400).json({
         msg: "email is alread exist",
       });
+      return;
     }
     const staffAdd = await prisma.staff.create({
       data: validatedData,
@@ -35,6 +36,7 @@ export const getStaff = async (req: Request, res: Response): Promise<void> => {
       res.status(201).json({
         msg :' Not register the any staff member on it '
       })
+      return;
     }
     res.status(201).json(getStaff);
   } catch (error) {
@@ -55,6 +57,7 @@ export const staffByname = async (
       res.status(404).json({
         msg: "not found",
       });
+      return
     }
 
     const staff = await prisma.staff.findUnique({
@@ -82,6 +85,7 @@ export const updateStaff = async (
       res.status(404).json({
         msg: " not exist",
       });
+      return
     }
     const update = await prisma.staff.update({
       where: { email: validatedData.email },

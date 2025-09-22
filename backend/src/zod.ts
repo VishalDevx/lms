@@ -92,6 +92,7 @@ export const studentSchema = z.object({
   fatherName: z.string().min(3).max(30),
   motherName: z.string().min(3).max(30),
   gender: z.enum(["MALE", "FEMALE", "OTHERS"]),
+    dob: z.coerce.date(),
   grade: GradeEnum,
   address: z.string().min(3).max(100),
   profilePic: z.string().url().optional(),

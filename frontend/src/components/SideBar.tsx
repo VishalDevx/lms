@@ -1,16 +1,20 @@
-import { useState } from "react";
 import { NavLink } from "react-router-dom";
+import logo from "../assets/logo.png";
 import {
   ChartPie,
-  UserPen,
   Users,
+  UserPen,
   HandCoins,
   BookCheck,
   Fingerprint,
   BanknoteArrowDown,
   LogOut,
-  Menu, // hamburger icon
 } from "lucide-react";
+
+interface SideBarProps {
+  collapsed: boolean;
+  toggleCollapsed?: () => void;
+}
 
 const navItems = [
   { to: "/dashboard", label: "Dashboard", icon: <ChartPie /> },
@@ -23,50 +27,58 @@ const navItems = [
   { to: "/logout", label: "Logout", icon: <LogOut /> },
 ];
 
-interface SideBarProps {
-  onItemClick: () => void;
-}
-
-const SideBar: React.FC<SideBarProps> = ({ onItemClick }) => {
-  const [collapsed, setCollapsed] = useState(false);
-
+const SideBar: React.FC<SideBarProps> = ({ collapsed, toggleCollapsed }) => {
   return (
     <div
-      className={`h-screen bg-black sticky top-0 transition-all duration-300 ${
-        collapsed ? "w-16" : "w-64"
+      className={`h-screen flex flex-col rounded-3xl shadow-2xl transition-all duration-300 bg-gray-50 ${
+        collapsed ? "w-16" : "w-80" // full width when expanded
       }`}
     >
-      {/* Header with hamburger */}
-      <div className="flex items-center justify-between p-4 border-b border-gray-700 text-white">
-        {!collapsed && <span className="text-xl font-bold">RGD School</span>}
-        <button
-          onClick={() => setCollapsed(!collapsed)}
-          className="p-2 rounded hover:bg-gray-700"
-        >
-          <Menu />
-        </button>
+      {/* Header with logo + name */}
+      <div className="flex items-center justify-between h-16 border-b border-gray-200 px-4">
+        <div className="flex items-center gap-2">
+          <img src={logo} alt="RGD" className="w-10 h-10" />
+          {!collapsed && (
+            <span className="text-xl font-bold text-gray-800 transition-all duration-300">
+              RGD <span className="text-blue-600">स्कूल</span>
+            </span>
+          )}
+        </div>
+
+        {toggleCollapsed && (
+          <button
+            onClick={toggleCollapsed}
+            className="  rounded hover:bg-gray-200 text-gray-600 flex items-center justify-center"
+          >
+            {!collapsed ? "←" : null}
+          </button>
+        )}
       </div>
 
       {/* Navigation */}
-      <nav className="flex flex-col p-4 gap-4">
+      <nav className="flex-1 flex flex-col p-4 gap-2 overflow-y-auto">
         {navItems.map((item) => (
           <NavLink
             key={item.to}
             to={item.to}
-            onClick={onItemClick}
             className={({ isActive }) =>
-              `flex items-center gap-2 p-2 rounded-md ${
+              `flex items-center gap-3 p-2 rounded-lg transition-colors ${
                 isActive
-                  ? "bg-gray-800 text-white"
-                  : "text-gray-300 hover:bg-gray-700"
+                  ? "bg-blue-50 text-blue-700 font-semibold"
+                  : "text-gray-700 hover:bg-blue-50 hover:text-blue-600"
               }`
             }
           >
-            {item.icon}
+            <span className="text-lg">{item.icon}</span>
             {!collapsed && item.label}
           </NavLink>
         ))}
       </nav>
+
+      {/* Footer */}
+      <div className="p-4 border-t border-gray-200 text-gray-500 text-xs">
+        {!collapsed && "© 2025 RGD School"}
+      </div>
     </div>
   );
 };

@@ -87,6 +87,7 @@ export const staffSchema = z.object({
 
 export const studentSchema = z.object({
   name: z.string().min(3).max(30),
+    dob: z.coerce.date(),
   fatherName: z.string().min(3).max(30),
   motherName: z.string().min(3).max(30),
   gender: z.enum(["MALE", "FEMALE", "OTHERS"]),
