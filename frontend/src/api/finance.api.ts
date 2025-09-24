@@ -17,6 +17,10 @@ export const getIncomeByWeek  = () =>{
 }
 export const getIncomeByMonth = () =>{
     return axiosInstance.get("/admin/income-by-month")
+
+}
+export const getIncomeByYear = ()=>{
+    return axiosInstance.get("/admin/income/year")
 }
 export const getExpenseByCategory = () =>{
     return axiosInstance.get("/admin/expense-by-category")
@@ -26,4 +30,7 @@ export const getExpenseByWeek = () =>{
 }
 export const getExpenseByMonth = ()=>{
     return axiosInstance.get("/admin/expense-by-month")
+}
+export const getExpenseByYear=()=>{
+    return axiosInstance.get("/admin/expense/year")
 }

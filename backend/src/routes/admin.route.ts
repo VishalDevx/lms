@@ -16,16 +16,15 @@ import {
   staffByname,
   updateStaff,
 } from "../controllers/staffController/manageStaff.controller";
+
 import {
-  addTrascation,
+   addTransaction,
   incomeByCategory,
-  incomeBymonth,
+  incomeByMonth,
   incomeByWeek,
   incomeByYear,
-} from "../controllers/expenseController/income.controller";
-import {
   expenseByCategory,
-  expenseBymonth,
+  expenseByMonth,
   expenseByWeek,
   expenseByYear,
 } from "../controllers/expenseController/expense.controller";
@@ -50,13 +49,13 @@ adminRoutes.get("/staff", getStaff);
 adminRoutes.get("/staff/:email", staffByname);
 adminRoutes.put("/staff/:email", updateStaff);
 // Expense tracker
-adminRoutes.post("/expenses", addTrascation);
-adminRoutes.get("/income-by-category", incomeByCategory);
-adminRoutes.get("/income-by-week", incomeByWeek);
-adminRoutes.get("/income-by-month", incomeBymonth);
-adminRoutes.get("/expense-by-category", expenseByCategory);
-adminRoutes.get("/expense-by-week", expenseByWeek);
-adminRoutes.get("/expense-by-month", expenseBymonth);
+adminRoutes.post("/expenses", addTransaction);
+adminRoutes.get("/income/category", incomeByCategory);
+adminRoutes.get("/income/week", incomeByWeek);
+adminRoutes.get("/income/month", incomeByMonth);
+adminRoutes.get("/expense/category", expenseByCategory);
+adminRoutes.get("/expense/week", expenseByWeek);
+adminRoutes.get("/expense/month", expenseByMonth);
 adminRoutes.get("/expense/year",expenseByYear);
 adminRoutes.get("/income/year",incomeByYear)
 export default adminRoutes;
