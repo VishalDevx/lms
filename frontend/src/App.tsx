@@ -20,7 +20,7 @@ function App() {
         <Route path="students/:rollNumber" element={<StudentView />} />
         <Route path="staff/:email" element={<StaffView/>}/>
         <Route path="staff" element={<StaffTable />} />
-        <Route path="/expsense" element={<Expense/>}/>
+        <Route path="/expense" element={<Expense/>}/>
         {/* Add more routes here if needed */}
       </Route>
     </Routes>
