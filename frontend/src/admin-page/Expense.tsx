@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import Button from "../components/Button";
 import { useExpenseByCategory } from "../hooks/useFinance";
 import { getGreeting } from "../utils/getGreetings";
@@ -23,8 +24,10 @@ return (
         <div className="bg-white rounded-full p-2 shadow-lg"></div>
       </div>
       <div>
-        <Button/>
+
+
       </div>
+       
 </div>
 )
 }

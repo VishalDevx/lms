@@ -1,21 +1,24 @@
-
 import axiosInstance from "../services/axiosInstance";
 import { studentSchema, StudentType } from "../types/zod";
-export const getALlStudent = () => {
+
+// Fetch all students
+export const getAllStudents = () => {
   return axiosInstance.get("/admin/students");
 };
+
+// Fetch a student by roll number
 export const getStudentByRoll = (rollNumber: string) => {
   return axiosInstance.get(`/admin/students/${rollNumber}`);
 };
 
-export const addStudent = async (data:StudentType) => {
-  const parsed = studentSchema.parse(data);
-  const payload = {
-    ...parsed,
-  }
-  return axiosInstance.post("/admin/students",payload);
+// Add a new student
+export const addStudent = async (data: StudentType) => {
+  const parsed = studentSchema.parse(data); // ensures type safety
+  return axiosInstance.post("/admin/students", parsed);
 };
 
+// Update an existing student
 export const updateStudent = (rollNumber: string, data: StudentType) => {
-  return axiosInstance.put(`/admin/${rollNumber}`, data);
+  const parsed = studentSchema.parse(data);
+  return axiosInstance.put(`/admin/students/${rollNumber}`, parsed);
 };

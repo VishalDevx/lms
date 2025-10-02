@@ -1,42 +1,63 @@
-import {  useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getStudentByRoll,addStudent,getALlStudent,updateStudent } from "../api/student.api";
+import { useMutation, UseMutationResult, useQuery, useQueryClient } from "@tanstack/react-query";
+import { getStudentByRoll, addStudent, getAllStudents, updateStudent } from "../api/student.api";
 import { studentSchema, StudentType } from "../types/zod";
+import { AxiosResponse } from "axios";
 
-export const useAddStudent = () =>{
-    const queryClient = useQueryClient()
-    return useMutation({
-        mutationFn : (data:StudentType)=>addStudent(data),
-        onSuccess:()=>{
-            queryClient.invalidateQueries({queryKey:["student"]})
-        }
-    })
-}
+// -------------------
+// Add Student Hook
+// -------------------
 
+export const useAddStudent = (): UseMutationResult<
+  AxiosResponse<any>, // return type from axios
+  Error,             // error type
+  StudentType        // variables type
+> => {
+  const queryClient = useQueryClient();
 
+  return useMutation<AxiosResponse<any>, Error, StudentType>({
+    mutationFn: (data: StudentType) => addStudent(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["all", "student"] });
+    },
+  });
+};
 
+// -------------------
+// Get Student by Roll
+// -------------------
 export const useStudentByRollNumber = (rollNumber: string) =>
   useQuery<StudentType>({
     queryKey: ["student", rollNumber],
     queryFn: async () => {
       const response = await getStudentByRoll(rollNumber);
-      // Validate API response with Zod
-      return studentSchema.parse(response.data);
+      return studentSchema.parse(response.data); // validate API response
     },
-    enabled: !!rollNumber,
+    enabled: !!rollNumber, // query only runs if rollNumber exists
   });
 
-export const useAllStudent = () => {
-  return useQuery({
+// -------------------
+// Get All Students
+// -------------------
+export const useAllStudent = () =>
+  useQuery<StudentType[]>({
     queryKey: ["all", "student"],
     queryFn: async () => {
-      const res = await getALlStudent();
-      return res.data; 
+      const res = await getAllStudents();
+      return res.data; // assuming API returns array of students
     },
   });
-};
+
+// -------------------
+// Update Student
+// -------------------
 export const useUpdateStudent = () => {
-  return useMutation({
-    mutationFn: ({ rollNumber, data }: { rollNumber: string; data: StudentType }) =>
-      updateStudent(rollNumber, data),
+  const queryClient = useQueryClient();
+
+  return useMutation<AxiosResponse<any>, Error, { rollNumber: string; data: StudentType }>({
+    mutationFn: ({ rollNumber, data }) => updateStudent(rollNumber, data),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["all", "student"] }); // refresh list
+      queryClient.invalidateQueries({ queryKey: ["student", variables.rollNumber] }); // refresh updated student
+    },
   });
 };

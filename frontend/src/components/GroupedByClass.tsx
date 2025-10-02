@@ -1,16 +1,18 @@
+import React, { useState } from "react";
 import { StudentType } from "../types/zod";
 import { useAllStudent } from "../hooks/useStudent";
 import Loading from "./Loading";
 import { Link } from "react-router-dom";
+import AddStudentModal from "./AddStudentForm";
 
-const GroupedByClass = () => {
-  const {
-    data: studentData,
-    isLoading: studentLoading,
-    error: studentError,
-  } = useAllStudent();
+const GroupedByClass: React.FC = () => {
+  const { data: studentData, isLoading: studentLoading, error: studentError } =
+    useAllStudent();
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   if (studentLoading) return <Loading />;
+
   if (studentError)
     return (
       <div className="p-6 text-center text-red-500 font-medium">
@@ -18,7 +20,7 @@ const GroupedByClass = () => {
       </div>
     );
 
-  // Group students class-wise
+  // Group students by grade
   const groupedByClass: Record<string, StudentType[]> =
     studentData?.reduce((acc: Record<string, StudentType[]>, student: StudentType) => {
       const grade = student.grade || "Unassigned";
@@ -34,6 +36,23 @@ const GroupedByClass = () => {
         Overview of each class with total students and average age.
       </p>
 
+      {/* Centered Add Student Button */}
+      <div className="flex justify-center mb-6">
+        <button
+          onClick={() => setIsModalOpen(true)}
+          className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-2 rounded-lg shadow-md transition-colors"
+        >
+          Add Student
+        </button>
+      </div>
+
+      {/* Add Student Modal */}
+      <AddStudentModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
+
+      {/* Students Table */}
       <div className="overflow-x-auto shadow-lg sm:rounded-lg border border-gray-200">
         <table className="min-w-full text-sm text-left text-gray-600">
           <thead className="text-xs text-gray-700 uppercase bg-blue-50">
@@ -47,8 +66,7 @@ const GroupedByClass = () => {
           <tbody className="divide-y divide-gray-200">
             {Object.entries(groupedByClass).map(([grade, students]: [string, StudentType[]]) => {
               const totalAge = students.reduce(
-                (sum, s) =>
-                  sum + (new Date().getFullYear() - new Date(s.dob).getFullYear()),
+                (sum, s) => sum + (new Date().getFullYear() - new Date(s.dob).getFullYear()),
                 0
               );
               const averageAge = Math.round(totalAge / students.length);
