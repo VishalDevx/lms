@@ -1,56 +1,75 @@
 import { Link } from "react-router-dom";
 import { useStaff } from "../hooks/useStaff";
 import { StaffType } from "../types/zod";
-import { Eye,  Trash2 } from "lucide-react";
+import { Eye, Trash2, UserPlus } from "lucide-react";
+import { useState } from "react";
+import AddStaffModel from "./AddStaffForm";
 
 const StaffTable = () => {
   const { data: staffData, isLoading: staffLoading, error: staffError } = useStaff();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   if (staffLoading) return <div className="p-4 text-gray-500">Loading...</div>;
   if (staffError) return <div className="p-4 text-red-500">Error occurred</div>;
 
   return (
     <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-      {/* Header with search */}
+      {/* Header with search + add button */}
       <div className="flex items-center justify-between flex-wrap gap-4 p-4 bg-gray-50">
         <h2 className="text-xl font-bold text-gray-800">Staff List</h2>
 
-        <div className="relative w-full sm:w-72">
-          <label htmlFor="table-search" className="sr-only">
-            Search
-          </label>
-          <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-            <svg
-              className="w-4 h-4 text-gray-500"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 20 20"
-            >
-              <path
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-              />
-            </svg>
+        <div className="flex items-center gap-3">
+          {/* Search */}
+          <div className="relative w-full sm:w-72">
+            <label htmlFor="table-search" className="sr-only">
+              Search
+            </label>
+            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+              <svg
+                className="w-4 h-4 text-gray-500"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+                />
+              </svg>
+            </div>
+            <input
+              type="text"
+              id="table-search"
+              className="block w-full p-2 pl-10 text-sm bg-gray-50 border border-gray-300 rounded-lg
+                text-gray-700 placeholder-gray-400
+                focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Search staff"
+            />
           </div>
-          <input
-            type="text"
-            id="table-search"
-            className="block w-full p-2 pl-10 text-sm bg-gray-50 border border-gray-300 rounded-lg
-              text-gray-700 placeholder-gray-400
-              focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            placeholder="Search staff"
-          />
+
+          {/* Add Staff button (icon + hover text) */}
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="bg-blue-600 flex items-center gap-2 text-white font-semibold px-4 py-2 rounded-lg shadow-md transition-all group overflow-hidden"
+          >
+            {/* Icon always visible */}
+            <UserPlus className="text-white transition-colors duration-300" />
+
+            {/* Text only on hover */}
+            <span className="max-w-0 opacity-0 overflow-hidden whitespace-nowrap transition-all duration-300 ease-in-out group-hover:max-w-xs group-hover:opacity-100">
+              Add Staff
+            </span>
+          </button>
         </div>
       </div>
 
-      {/* Table */}
+      {/* Staff Table */}
       <div className="overflow-x-auto">
         <table className="min-w-full text-sm text-left text-gray-600">
-          {/* Table Header */}
           <thead className="text-xs text-gray-700 uppercase bg-blue-50">
             <tr>
               <th scope="col" className="px-6 py-3">Sr</th>
@@ -61,14 +80,9 @@ const StaffTable = () => {
             </tr>
           </thead>
 
-          {/* Table Body */}
           <tbody className="divide-y divide-gray-200">
             {staffData?.map((staff: StaffType, index: number) => (
-              <tr
-                key={staff.email}
-                className="bg-white hover:bg-gray-50 transition"
-              >
-                {/* Serial number */}
+              <tr key={staff.email} className="bg-white hover:bg-gray-50 transition">
                 <td className="px-6 py-4 font-medium text-gray-700">{index + 1}</td>
 
                 {/* Name & Address */}
@@ -100,11 +114,8 @@ const StaffTable = () => {
 
                 {/* Actions */}
                 <td className="px-6 py-4 flex space-x-3">
-                  <Link
-                    to={`/staff/${staff.email}`}
-                    className="text-blue-600 hover:text-blue-800 font-medium"
-                  >
-                  <Eye />
+                  <Link to={`/staff/${staff.email}`} className="text-blue-600 hover:text-blue-800 font-medium">
+                    <Eye />
                   </Link>
                   <button className="text-rose-500 hover:text-rose-700 font-medium">
                     <Trash2 />
@@ -115,6 +126,9 @@ const StaffTable = () => {
           </tbody>
         </table>
       </div>
+
+      {/* Add Staff Modal */}
+      <AddStaffModel isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </div>
   );
 };

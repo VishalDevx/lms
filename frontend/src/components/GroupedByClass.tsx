@@ -4,6 +4,7 @@ import { useAllStudent } from "../hooks/useStudent";
 import Loading from "./Loading";
 import { Link } from "react-router-dom";
 import AddStudentModal from "./AddStudentForm";
+import { UserPlus } from "lucide-react";
 
 const GroupedByClass: React.FC = () => {
   const { data: studentData, isLoading: studentLoading, error: studentError } =
@@ -35,22 +36,35 @@ const GroupedByClass: React.FC = () => {
       <p className="text-gray-600 mb-6">
         Overview of each class with total students and average age.
       </p>
+<div className="flex justify-end mb-6">
+  <button
+    onClick={() => setIsModalOpen(true)}
+    className="bg-blue-600 flex items-center gap-2 text-white font-semibold px-4 py-2 rounded-3xl shadow-md transition-all group overflow-hidden"
+  >
+    {/* Icon always visible */}
+    <UserPlus className="text-white transition-colors duration-300" />
 
-      {/* Centered Add Student Button */}
-      <div className="flex justify-center mb-6">
-        <button
-          onClick={() => setIsModalOpen(true)}
-          className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-2 rounded-lg shadow-md transition-colors"
-        >
-          Add Student
-        </button>
-      </div>
+    {/* Text visible only on hover with smooth slide */}
+    <span className="max-w-0 opacity-0 overflow-hidden whitespace-nowrap transition-all duration-400 ease-in-out group-hover:max-w-xs group-hover:opacity-100">
+      Add Student
+    </span>
+  </button>
+</div>
 
-      {/* Add Student Modal */}
-      <AddStudentModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-      />
+{/* Add Student Modal */}
+<AddStudentModal
+  isOpen={isModalOpen}
+  onClose={() => setIsModalOpen(false)}
+/>
+
+
+{/* Add Student Modal */}
+<AddStudentModal
+  isOpen={isModalOpen}
+  onClose={() => setIsModalOpen(false)}
+/>
+
+
 
       {/* Students Table */}
       <div className="overflow-x-auto shadow-lg sm:rounded-lg border border-gray-200">

@@ -21,41 +21,58 @@ model Student {
   motherName   String
   gender       Gender
   grade        Grade
-  dob DateTime
+  dob          DateTime
   address      String
   profilePic   String?
   rollNumber   String       @unique
-  bloodGroup   String? // Optional
-  mobileNumber String? // Optional
+  bloodGroup   String?
+  mobileNumber String?
   createdAt    DateTime     @default(now())
   payments     Payment[]
   feeHistory   FeeHistory[]
-  StudentFee   StudentFee[]
+  studentFees  StudentFee[]
 }
 
 model FeeStructure {
-  id          Int          @id @default(autoincrement())
+  id          Int       @id @default(autoincrement())
   name        String
   amount      Float
   month       DateTime
   grade       Grade
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
   studentFees StudentFee[]
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
 }
 
 model StudentFee {
-  id         Int       @id @default(autoincrement())
-  status     FeeStatus @default(PENDING)
-  paidAmount Float     @default(0.0)
-  dueAmount  Float
-  dueDate    DateTime
-  payments   Payment[]
-
-  Student        Student      @relation(fields: [studentId], references: [id])
-  studentId      Int
-  FeeStructure   FeeStructure @relation(fields: [feeStructureId], references: [id])
+  id            Int        @id @default(autoincrement())
+  status        FeeStatus  @default(PENDING)
+  totalFee      Float
+  paidAmount    Float      @default(0)
+  dueAmount     Float
+  dueDate       DateTime
+  studentId     Int
   feeStructureId Int
+  Student       Student      @relation(fields: [studentId], references: [id])
+  FeeStructure  FeeStructure @relation(fields: [feeStructureId], references: [id])
+  feeHistories  FeeHistory[]
+  payments      Payment[]
+}
+
+model FeeHistory {
+  id           Int        @id @default(autoincrement())
+  changeType   String     // "Manual Update", "Auto Update", "Discount"
+  oldAmount    Float
+  newAmount    Float
+  status       FeeStatus
+  note         String?
+  pdfUrl       String?
+  changedAt    DateTime   @default(now())
+  studentFeeId Int
+  StudentFee   StudentFee @relation(fields: [studentFeeId], references: [id])
+
+  Student Student[]
 }
 
 model Payment {
@@ -67,21 +84,10 @@ model Payment {
   createdAt      DateTime       @default(now())
   updatedAt      DateTime       @updatedAt
 
-  Student      Student?    @relation(fields: [studentId], references: [id])
-  studentId    Int?
-  StudentFee   StudentFee? @relation(fields: [studentFeeId], references: [id])
-  studentFeeId Int?
-}
-
-model FeeHistory {
-  id Int @id @default(autoincrement())
-
-  amount    Decimal
-  status    FeeStatus
-  paidDate  DateTime?
-  createdAt DateTime  @default(now())
-  Student   Student?  @relation(fields: [studentId], references: [id])
-  studentId Int?
+  studentId      Int?
+  studentFeeId   Int?
+  Student        Student?    @relation(fields: [studentId], references: [id])
+  StudentFee     StudentFee? @relation(fields: [studentFeeId], references: [id])
 }
 
 model Staff {
@@ -108,11 +114,9 @@ model ExpenseTracker {
   date        DateTime
   category    String?
   createdAt   DateTime        @default(now())
-  
 }
 
-
-enum  TransactionType {
+enum TransactionType {
   CREDIT
   DEBIT
 }

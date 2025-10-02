@@ -38,7 +38,7 @@ const AddStudentModal: React.FC<Props> = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-white/50 backdrop-blur-md flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-white/50 backdrop-blur-md flex items-center justify-center z-100">
       <div className="bg-white w-full max-w-3xl p-6 rounded-xl shadow-xl relative max-h-[90vh] overflow-y-auto">
         {/* Close button */}
         <button
@@ -62,7 +62,7 @@ const AddStudentModal: React.FC<Props> = ({ isOpen, onClose }) => {
             <input
               type="text"
               {...register("name")}
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             {errors.name && <p className="text-red-500 mt-1">{errors.name.message}</p>}
           </div>
@@ -73,7 +73,7 @@ const AddStudentModal: React.FC<Props> = ({ isOpen, onClose }) => {
             <input
               type="text"
               {...register("rollNumber")}
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             {errors.rollNumber && (
               <p className="text-red-500 mt-1">{errors.rollNumber.message}</p>
@@ -86,7 +86,7 @@ const AddStudentModal: React.FC<Props> = ({ isOpen, onClose }) => {
             <input
               type="date"
               {...register("dob")}
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             {errors.dob && <p className="text-red-500 mt-1">{errors.dob.message}</p>}
           </div>
@@ -96,7 +96,7 @@ const AddStudentModal: React.FC<Props> = ({ isOpen, onClose }) => {
             <label className="block text-gray-600 font-medium mb-1">Grade</label>
             <select
               {...register("grade")}
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="">Select Grade</option>
               <option value="NURSERY">Nursery</option>
@@ -122,7 +122,7 @@ const AddStudentModal: React.FC<Props> = ({ isOpen, onClose }) => {
             <input
               type="text"
               {...register("fatherName")}
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             {errors.fatherName && <p className="text-red-500 mt-1">{errors.fatherName.message}</p>}
           </div>
@@ -133,7 +133,7 @@ const AddStudentModal: React.FC<Props> = ({ isOpen, onClose }) => {
             <input
               type="text"
               {...register("motherName")}
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             {errors.motherName && <p className="text-red-500 mt-1">{errors.motherName.message}</p>}
           </div>
@@ -145,7 +145,7 @@ const AddStudentModal: React.FC<Props> = ({ isOpen, onClose }) => {
               type="tel"
               {...register("mobileNumber")}
               placeholder="+911234567890"
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             {errors.mobileNumber && <p className="text-red-500 mt-1">{errors.mobileNumber.message}</p>}
           </div>
@@ -155,7 +155,7 @@ const AddStudentModal: React.FC<Props> = ({ isOpen, onClose }) => {
             <label className="block text-gray-600 font-medium mb-1">Gender</label>
             <select
               {...register("gender")}
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="">Select Gender</option>
               <option value="MALE">Male</option>
@@ -171,7 +171,7 @@ const AddStudentModal: React.FC<Props> = ({ isOpen, onClose }) => {
             <textarea
               {...register("address")}
               rows={3}
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             {errors.address && <p className="text-red-500 mt-1">{errors.address.message}</p>}
           </div>
@@ -180,7 +180,7 @@ const AddStudentModal: React.FC<Props> = ({ isOpen, onClose }) => {
   <label className="block text-gray-600 font-medium mb-1">Blood Group</label>
   <select
     {...register("bloodGroup")}
-    className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+    className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
   >
     <option value="">Select Blood Group</option>
     <option value="A+">A+</option>
@@ -203,17 +203,17 @@ const AddStudentModal: React.FC<Props> = ({ isOpen, onClose }) => {
               type="url"
               {...register("profilePic")}
               placeholder="https://example.com/photo.jpg"
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             {errors.profilePic && <p className="text-red-500 mt-1">{errors.profilePic.message}</p>}
           </div>
 
           {/* Submit Button */}
-          <div className="md:col-span-2 text-right mt-2">
+          <div className="md:col-span-2 text-center w-full mt-2">
             <button
               type="submit"
               disabled={isAdding}
-              className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-2 rounded-lg shadow-md disabled:opacity-50 transition-colors"
+              className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-3xl shadow-md disabled:opacity-50 transition-colors"
             >
               {isAdding ? "Adding..." : "Add Student"}
             </button>

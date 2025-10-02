@@ -1,12 +1,14 @@
 import { Request, Response } from "express";
-
 import prisma from "../../config/db";
 import { studentSchema } from "../../zod";
 import { ZodError } from "zod";
+
+// Add new student
 export const addStudent = async (req: Request, res: Response): Promise<any> => {
   try {
     const validatedData = studentSchema.parse(req.body);
 
+    // Check for duplicate rollNumber or mobileNumber
     const existStudent = await prisma.student.findFirst({
       where: {
         OR: [
@@ -38,29 +40,35 @@ export const addStudent = async (req: Request, res: Response): Promise<any> => {
         issues: error.errors,
       });
     }
-
     return res.status(500).json({
       msg: "Internal error when adding the new student",
       error,
     });
   }
 };
+
+// Update student info
 export const updateStudent = async (
   req: Request,
   res: Response
 ): Promise<any> => {
   try {
     const { rollNumber } = req.body;
-    // validate the input data
+
+    // Partial validation
     const validatedData = studentSchema.partial().parse(req.body);
+
     const existStudent = await prisma.student.findUnique({
       where: { rollNumber },
     });
+
     if (!existStudent) {
       return res.status(404).json({
-        msg: " Student not found!",
+        msg: "Student not found!",
       });
     }
+
+    // Check for duplicate rollNumber or mobileNumber
     if (validatedData.rollNumber || validatedData.mobileNumber) {
       const duplicateStudent = await prisma.student.findFirst({
         where: {
@@ -73,41 +81,55 @@ export const updateStudent = async (
       });
       if (duplicateStudent) {
         return res.status(400).json({
-          msg: " Roll Number and Mobile Number is already exists !",
+          msg: "Roll Number and Mobile Number already exist!",
         });
       }
     }
-    // update in database
+
     const updateStudent = await prisma.student.update({
       where: { rollNumber },
       data: validatedData,
     });
+
     return res.status(200).json({
-      msg: " student informatin updated successfully!",
+      msg: "Student information updated successfully!",
       updateStudent,
     });
   } catch (error) {
     console.error(error);
     return res.status(500).json({
-      msg: " Internal error is occured when updating the student !",
+      msg: "Internal error occurred when updating the student!",
       error,
     });
   }
 };
 
+// Get all students with enhanced fee info
 export const allStudent = async (req: Request, res: Response): Promise<any> => {
   try {
-    const allStudent = await prisma.student.findMany();
-    const fee = await prisma.studentFee.findMany();
-    return res.status(201).json(allStudent);
+    const allStudents = await prisma.student.findMany({
+      include: {
+        studentFees: {
+          include: {
+            payments: true,
+            feeHistories: true,
+            FeeStructure: true,
+          },
+        },
+      },
+    });
+
+    return res.status(200).json(allStudents);
   } catch (error) {
     console.error(error);
-    return res.status(404).json({
-      msg: " some error is occured ",
+    return res.status(500).json({
+      msg: "Some error occurred while fetching students",
       error,
     });
   }
 };
+
+// Get single student by roll number with full fee info
 export const studentByRollnumber = async (
   req: Request,
   res: Response
@@ -124,10 +146,11 @@ export const studentByRollnumber = async (
     const studentWithFees = await prisma.student.findUnique({
       where: { rollNumber },
       include: {
-        StudentFee: {
+        studentFees: {
           include: {
-           
-            payments: true, // if you also want payment history
+            payments: true,       // payment history
+            feeHistories: true,   // track updates and discounts
+            FeeStructure: true,   // month, grade, original amount
           },
         },
       },
@@ -136,7 +159,7 @@ export const studentByRollnumber = async (
     if (!studentWithFees) {
       return res.status(404).json({ msg: "Student not found" });
     }
-    console.log(studentWithFees);
+
     return res.status(200).json(studentWithFees);
   } catch (error) {
     console.error("Error fetching student with fee:", error);

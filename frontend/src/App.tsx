@@ -7,6 +7,7 @@ import StaffTable from "./components/StaffTable";
 import ClassStudentList from "./components/ClassStudentList";
 import StaffView from "./admin-page/StaffView";
 import Expense from "./admin-page/Expense";
+import FeeManagementPage from "./admin-page/FeeManagementPage";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route path="staff/:email" element={<StaffView/>}/>
         <Route path="staff" element={<StaffTable />} />
         <Route path="/expense" element={<Expense/>}/>
+        <Route path="/fee-management" element={<FeeManagementPage/>}/>
         {/* Add more routes here if needed */}
       </Route>
     </Routes>
