@@ -1,10 +1,9 @@
 // src/api/fee.api.ts
 import axiosInstance from "../services/axiosInstance";
+import { FeeStructureType } from "../types/zod";
 
-export const runFeeSchedulerApi = async () => {
-  return axiosInstance.post("/admin/fee-scheduler/run");
-};
 
-export const assignFeeStructure = async (data: { name: string; grade: string; amount: number; month: Date }) => {
+
+export const assignFeeStructure = async (data: FeeStructureType) => {
   return axiosInstance.post("/admin/fee-structure", data);
 };

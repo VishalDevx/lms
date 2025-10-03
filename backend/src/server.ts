@@ -8,7 +8,7 @@ import express, {
 import cors from "cors";
 import dotenv from "dotenv";
 import adminRoutes from "./routes/admin.route";
-import feeSchedulerRoutes from "./routes/feeScheduler.routes";
+
 // import paymentRoutes from "./routes/payment.route";
 import bodyParser from "body-parser";
 // import authRoutes from "./routes/auth.route";
@@ -30,7 +30,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Routes
 
 app.use("/api/v1/admin/", adminRoutes);
-app.use("/api/admin/fee-scheduler", feeSchedulerRoutes);
+
 // app.use("/api/payment/", paymentRoutes);
 // app.use("/api/v1/auth/", authRoutes);
 

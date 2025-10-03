@@ -15,7 +15,7 @@ model Admin {
 }
 
 model Student {
-  id           Int          @id @default(autoincrement())
+  id           Int            @id @default(autoincrement())
   name         String
   fatherName   String
   motherName   String
@@ -24,13 +24,16 @@ model Student {
   dob          DateTime
   address      String
   profilePic   String?
-  rollNumber   String       @unique
+  rollNumber   String         @unique
   bloodGroup   String?
   mobileNumber String?
-  createdAt    DateTime     @default(now())
-  payments     Payment[]
-  feeHistory   FeeHistory[]
-  studentFees  StudentFee[]
+  createdAt    DateTime       @default(now())
+
+  // Relations
+  payments        Payment[]
+  feeHistory      FeeHistory[]
+  studentFees     StudentFee[]
+  paymentReceipts PaymentReceipt[]
 }
 
 model FeeStructure {
@@ -46,18 +49,21 @@ model FeeStructure {
 }
 
 model StudentFee {
-  id            Int        @id @default(autoincrement())
-  status        FeeStatus  @default(PENDING)
-  totalFee      Float
-  paidAmount    Float      @default(0)
-  dueAmount     Float
-  dueDate       DateTime
-  studentId     Int
+  id             Int          @id @default(autoincrement())
+  status         FeeStatus    @default(PENDING)
+  totalFee       Float
+  paidAmount     Float        @default(0)
+  dueAmount      Float
+  dueDate        DateTime
+  studentId      Int
   feeStructureId Int
-  Student       Student      @relation(fields: [studentId], references: [id])
-  FeeStructure  FeeStructure @relation(fields: [feeStructureId], references: [id])
-  feeHistories  FeeHistory[]
-  payments      Payment[]
+
+  // Relations
+  Student        Student      @relation(fields: [studentId], references: [id])
+  FeeStructure   FeeStructure @relation(fields: [feeStructureId], references: [id])
+  feeHistories   FeeHistory[]
+  payments       Payment[]
+  paymentReceipts PaymentReceipt[]
 }
 
 model FeeHistory {
@@ -70,6 +76,8 @@ model FeeHistory {
   pdfUrl       String?
   changedAt    DateTime   @default(now())
   studentFeeId Int
+
+  // Relations
   StudentFee   StudentFee @relation(fields: [studentFeeId], references: [id])
 
   Student Student[]
@@ -86,10 +94,23 @@ model Payment {
 
   studentId      Int?
   studentFeeId   Int?
+
+  // Relations
   Student        Student?    @relation(fields: [studentId], references: [id])
   StudentFee     StudentFee? @relation(fields: [studentFeeId], references: [id])
 }
+model PaymentReceipt {
+  id           String   @id @default(uuid())
+  receiptNo    String   @unique
+  studentId    Int
+  studentFeeId Int
+  amountPaid   Float
+  paymentDate  DateTime @default(now())
+  paymentMethod String
 
+  student      Student   @relation(fields: [studentId], references: [id])
+  studentFee   StudentFee @relation(fields: [studentFeeId], references: [id])
+}
 model Staff {
   id            Int      @id @default(autoincrement())
   name          String

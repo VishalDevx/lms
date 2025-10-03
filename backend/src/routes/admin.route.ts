@@ -24,7 +24,8 @@ import {
   expenseByWeek,
   expenseByYear,
 } from "../controllers/expenseController/expense.controller";
-import { createFeeStructure, runFeeScheduler } from "../controllers/feeControllers/fee.controller";
+import { createFeeStructure } from "../controllers/feeControllers/fee.controller";
+import { payStudentFee } from "../controllers/feeControllers/pay-fee.controller";
 
 const adminRoutes = Router();
 
@@ -35,7 +36,7 @@ adminRoutes.put("/students/:rollNumber", updateStudent); // use rollNumber in UR
 adminRoutes.get("/students/:rollNumber", studentByRollnumber);
 
 // Fee Management
-adminRoutes.post("/fee-scheduler/run",runFeeScheduler);
+adminRoutes.post("/students/:studentId/pay-fee", payStudentFee);
 adminRoutes.post("/fee-structure", createFeeStructure);
 // staff Management
 

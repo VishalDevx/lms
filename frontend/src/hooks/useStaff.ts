@@ -1,17 +1,23 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, UseMutationResult, useQuery, useQueryClient } from "@tanstack/react-query";
 import { addStaff,getStaff,updateStaff,getByName } from "../api/staff.api";
 
 import { staffSchema, StaffType } from "../types/zod";
+import { AxiosResponse } from "axios";
 
-export const useAddStaff = ()=>{
-    const queryClient = useQueryClient();
-    return useMutation({
-        mutationFn:(data:StaffType)=>addStaff(data),
-        onSuccess:()=>{
-            queryClient.invalidateQueries({queryKey:["staff"]})
-        }
-    })
-}
+export const useAddStaff = (): UseMutationResult<
+  AxiosResponse<any>, // return type from axios
+  Error,             // error type
+  StaffType        // variables type
+> => {
+  const queryClient = useQueryClient();
+
+  return useMutation<AxiosResponse<any>, Error, StaffType>({
+    mutationFn: (data: StaffType) => addStaff(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["all", "staff"] });
+    },
+  });
+};
 export const useStaff = () => {
   return useQuery({
     queryKey: ["all","staff"],

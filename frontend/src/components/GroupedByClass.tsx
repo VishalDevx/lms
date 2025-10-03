@@ -36,6 +36,8 @@ const GroupedByClass: React.FC = () => {
       <p className="text-gray-600 mb-6">
         Overview of each class with total students and average age.
       </p>
+
+    {/* student adding button */}
 <div className="flex justify-end mb-6">
   <button
     onClick={() => setIsModalOpen(true)}
