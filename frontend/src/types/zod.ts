@@ -102,7 +102,7 @@ export const expenseSchema = z.object({
   amount: z.number().positive(),
   type: TransactionTypeEnum,
   description: z.string(),
-  date: z.string().transform((val) => new Date(val)),
+ date: z.preprocess((val) => new Date(val as string), z.date()),
   category: z.string().optional(),
 });
 

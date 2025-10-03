@@ -1,35 +1,40 @@
-import { Link } from "react-router-dom";
-import Button from "../components/Button";
-import { useExpenseByCategory } from "../hooks/useFinance";
+import React, { useState } from "react";
+import AddTransactionModal from "../components/AddExpenseForm";
 import { getGreeting } from "../utils/getGreetings";
+import IncomeExpenseTable from "../components/IncomeExpenseTable";
 
 
-const Expense = ()=>{
-    const {data:expenseByCategoryData} = useExpenseByCategory();
-   
+const Expense = () => {
+  const greeting = getGreeting();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-const greeting = getGreeting()
-return (
-       <div className="p-6 bg-gray-50 min-h-screen space-y-6">
+  return (
+    <div className="p-6 bg-gray-50 min-h-screen space-y-6">
       {/* Header */}
       <div className="bg-gradient-to-r from-blue-500 to-blue-600 h-56 flex items-center justify-between p-10 rounded-b-[50%] shadow-lg">
         <div>
-          <h1 className="text-5xl font-bold text-white">
-            {greeting}, Deepak Sir 👋
-          </h1>
-          <p className="text-white mt-2 text-lg">
-            Here's your school financial overview
-          </p>
+          <h1 className="text-5xl font-bold text-white">{greeting}, Deepak Sir 👋</h1>
+          <p className="text-white mt-2 text-lg">Here's your school financial overview</p>
         </div>
-        <div className="bg-white rounded-full p-2 shadow-lg"></div>
+        <div className="flex items-center space-x-4">
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="bg-white text-blue-600 font-semibold px-6 py-2 rounded-lg shadow-md hover:bg-gray-100 transition-colors"
+          >
+            Add Transaction
+          </button>
+        </div>
       </div>
-      <div>
 
+      {/* Dashboard */}
+      <IncomeExpenseTable />
 
-      </div>
-       
-</div>
-)
-}
+   
+
+      {/* Modal */}
+      <AddTransactionModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+    </div>
+  );
+};
 
 export default Expense;

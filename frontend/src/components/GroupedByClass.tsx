@@ -60,11 +60,6 @@ const GroupedByClass: React.FC = () => {
 />
 
 
-{/* Add Student Modal */}
-<AddStudentModal
-  isOpen={isModalOpen}
-  onClose={() => setIsModalOpen(false)}
-/>
 
 
 
