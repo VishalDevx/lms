@@ -1,57 +1,78 @@
-
+import React from "react";
 import DashboardChart from "../components/DashboardChart";
 import {
-  useExpenseByYear,
-  useExpenseByMonth,
-  useExpenseByWeek,
-  useIncomeByYear,
-  useIncomeByMonth,
-  useIncomeByWeek,
+  useTransactionsByMonth,
+  useTransactionsByWeek,
+  useTransactionsByYear,
 } from "../hooks/useFinance";
 import { getGreeting } from "../utils/getGreetings";
-import { Users, UserCheck, HandCoins, CreditCard, Banknote } from "lucide-react";
+import {
+  Users,
+  UserCheck,
+  HandCoins,
+  CreditCard,
+  Banknote,
+} from "lucide-react";
 import { get5DayIntervalData } from "../utils/get5DayFinance";
 import { useAllStudent } from "../hooks/useStudent";
 import { useStaff } from "../hooks/useStaff";
 
-const DashBoard = () => {
+interface TransactionData {
+  labels: string[];
+  incomeData: number[];
+  expenseData: number[];
+  totalIncome: number;
+  totalExpense: number;
+}
+
+const DashBoard: React.FC = () => {
   // -------------------- Fetch Data --------------------
-  const { data: expenseByYearData } = useExpenseByYear();
-  const { data: incomeByYearData } = useIncomeByYear();
-  const { data: expenseByMonthData } = useExpenseByMonth();
-  const { data: incomeByMonthData } = useIncomeByMonth();
-  const { data: expenseByWeekData } = useExpenseByWeek();
-  const { data: incomeByWeekData } = useIncomeByWeek();
-  const { data: studentData}       = useAllStudent()
-  const { data: staffData}       = useStaff()
+  const { data: transactionByYearData } = useTransactionsByYear();
+  const { data: transactionByMonthData } = useTransactionsByMonth();
+  const { data: transactionByWeekData } = useTransactionsByWeek();
+  const { data: studentData } = useAllStudent();
+  const { data: staffData } = useStaff();
 
   const yearBalance =
-    (incomeByYearData?.totalIncome ?? 0) -
-    (expenseByYearData?.totalExpense ?? 0);
+    (transactionByYearData?.totalIncome ?? 0) -
+    (transactionByYearData?.totalExpense ?? 0);
 
   const greeting = getGreeting();
 
   // -------------------- Prepare Chart Data --------------------
-  // Week
-  const weekLabels = incomeByWeekData?.labels ?? ["Week"];
-  const weekIncomeData = incomeByWeekData?.incomeData ?? [0];
-  const weekExpenseData = expenseByWeekData?.expenseData ?? [0];
+  const weekData: TransactionData = {
+    labels: transactionByWeekData?.labels ?? ["Week"],
+    incomeData: transactionByWeekData?.incomeData ?? [0],
+    expenseData: transactionByWeekData?.expenseData ?? [0],
+    totalIncome: transactionByWeekData?.totalIncome ?? 0,
+    totalExpense: transactionByWeekData?.totalExpense ?? 0,
+  };
 
-  // Month (5-day intervals)
-  const monthLabels = incomeByMonthData?.labels ?? [];
-  const monthIncomeData = incomeByMonthData?.incomeData ?? [];
-  const monthExpenseData = expenseByMonthData?.expenseData ?? [];
+  const monthData: TransactionData = {
+    labels: transactionByMonthData?.labels ?? [],
+    incomeData: transactionByMonthData?.incomeData ?? [],
+    expenseData: transactionByMonthData?.expenseData ?? [],
+    totalIncome: transactionByMonthData?.totalIncome ?? 0,
+    totalExpense: transactionByMonthData?.totalExpense ?? 0,
+  };
 
-  const monthTransformed = get5DayIntervalData(monthLabels, monthIncomeData);
+  // Transform monthly into 5-day intervals
+  const monthTransformed = get5DayIntervalData(
+    monthData.labels,
+    monthData.incomeData
+  );
   const monthExpenseTransformed = get5DayIntervalData(
-    monthLabels,
-    monthExpenseData
+    monthData.labels,
+    monthData.expenseData
   );
 
-  // Year
-  const yearLabels = incomeByYearData?.labels ?? [];
-  const yearIncomeData = incomeByYearData?.incomeData ?? [];
-  const yearExpenseData = expenseByYearData?.expenseData ?? [];
+  const yearData: TransactionData = {
+    labels: transactionByYearData?.labels ?? [],
+    incomeData: transactionByYearData?.incomeData ?? [],
+    expenseData: transactionByYearData?.expenseData ?? [],
+    totalIncome: transactionByYearData?.totalIncome ?? 0,
+    totalExpense: transactionByYearData?.totalExpense ?? 0,
+  };
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen space-y-6">
@@ -74,8 +95,9 @@ const DashBoard = () => {
           <Users className="w-10 h-10 text-blue-500" />
           <div>
             <p className="text-sm text-gray-500">Total Students</p>
-            <p className="text-2xl font-bold text-gray-800">{
-studentData?.length}</p>
+            <p className="text-2xl font-bold text-gray-800">
+              {studentData?.length ?? 0}
+            </p>
           </div>
         </div>
 
@@ -83,7 +105,9 @@ studentData?.length}</p>
           <UserCheck className="w-10 h-10 text-green-500" />
           <div>
             <p className="text-sm text-gray-500">Total Staff</p>
-            <p className="text-2xl font-bold text-gray-800">{staffData?.length}</p>
+            <p className="text-2xl font-bold text-gray-800">
+              {staffData?.length ?? 0}
+            </p>
           </div>
         </div>
 
@@ -92,7 +116,7 @@ studentData?.length}</p>
           <div>
             <p className="text-sm text-green-700">Income (Year)</p>
             <p className="text-2xl font-bold text-green-800">
-              ₹{incomeByYearData?.totalIncome ?? 0}
+              ₹{yearData.totalIncome}
             </p>
           </div>
         </div>
@@ -102,7 +126,7 @@ studentData?.length}</p>
           <div>
             <p className="text-sm text-red-700">Expense (Year)</p>
             <p className="text-2xl font-bold text-red-800">
-              ₹{expenseByYearData?.totalExpense ?? 0}
+              ₹{yearData.totalExpense}
             </p>
           </div>
         </div>
@@ -111,54 +135,46 @@ studentData?.length}</p>
           <Banknote className="w-10 h-10 text-purple-700" />
           <div>
             <p className="text-sm text-purple-700">Balance</p>
-            <p className="text-2xl font-bold text-purple-800">₹{yearBalance}</p>
+            <p className="text-2xl font-bold text-purple-800">
+              ₹{yearBalance}
+            </p>
           </div>
         </div>
       </div>
 
-      {/* Charts: Week, Month, Year in one row */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      {/* Charts: Week, Month, Year */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Weekly Chart */}
         <div className="bg-white p-6 rounded-2xl shadow-lg">
           <h3 className="text-xl font-semibold mb-4">
             Income vs Expense (Week)
           </h3>
           <DashboardChart
-            labels={weekLabels}
-            incomeData={weekIncomeData}
-            expenseData={weekExpenseData}
-            type="line"
+            labels={weekData.labels}
+            incomeData={weekData.incomeData}
+            expenseData={weekData.expenseData}
+            type="area"
+            xAxisType="category" // weekly = categories
             height={300}
           />
         </div>
 
-        {/* Monthly Chart (5-day intervals) */}
+        {/* Monthly Chart */}
         <div className="bg-white p-6 rounded-2xl shadow-lg">
           <h3 className="text-xl font-semibold mb-4">
             Income vs Expense (Month)
           </h3>
           <DashboardChart
-            labels={monthTransformed.labels} // only 5,10,15,20,25,30
+            labels={monthTransformed.labels}
             incomeData={monthTransformed.data}
             expenseData={monthExpenseTransformed.data}
             type="line"
+            xAxisType="category" // or "datetime" if you provide ISO dates
             height={300}
           />
         </div>
 
-        {/* Yearly Chart */}
-        <div className="bg-white p-6 rounded-2xl shadow-lg">
-          <h3 className="text-xl font-semibold mb-4">
-            Income vs Expense (Year)
-          </h3>
-          <DashboardChart
-            labels={yearLabels}
-            incomeData={yearIncomeData}
-            expenseData={yearExpenseData}
-            type="line"
-            height={300}
-          />
-        </div>
+       
       </div>
     </div>
   );

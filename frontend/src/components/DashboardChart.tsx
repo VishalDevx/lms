@@ -1,37 +1,36 @@
+import React from "react";
 import Chart from "react-apexcharts";
 
 interface DashboardChartProps {
   labels: string[];
   incomeData: number[];
   expenseData: number[];
-  type?: "line"; 
+  type?: "line" | "area";
   height?: number;
+  xAxisType?: "category" | "datetime";
 }
 
-const DashboardChart = ({
-  labels,
-  incomeData,
-  expenseData,
+const DashboardChart: React.FC<DashboardChartProps> = ({
+  labels = [],
+  incomeData = [],
+  expenseData = [],
   type = "line",
   height = 300,
-}: DashboardChartProps) => {
+  xAxisType = "category",
+}) => {
   const options: ApexCharts.ApexOptions = {
     chart: {
-      id: "income-expense",
-      toolbar: { show: false },
-      background: "transparent",
+      type,
+      toolbar: { show: true },
       zoom: { enabled: false },
     },
-    colors: ["#22c55e", "#ef4444"],
     xaxis: {
-      categories: labels,
-      labels: { style: { colors: "#6b7280" } },
+      type: xAxisType,
+      categories: xAxisType === "category" ? labels : undefined,
+      labels: { rotate: -45 },
     },
-    dataLabels: { enabled: false },
-    stroke: { curve: "smooth", width: 3 },
     tooltip: { enabled: true },
-    markers: { size: 5 },
-    grid: { borderColor: "#e5e7eb", strokeDashArray: 5 },
+    legend: { show: true },
   };
 
   const series = [

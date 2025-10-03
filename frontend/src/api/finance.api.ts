@@ -8,29 +8,22 @@ export const addTrascation = async (data : ExpenseFormType) =>{
         date : parsed.date.toISOString()
 
     }
-    return axiosInstance.post('/admin/expenses',payload)
+    return axiosInstance.post('/admin/add',payload)
 }
-export const getIncomeByCategory = () =>{
-    return axiosInstance.get("/admin/income/category")}
-export const getIncomeByWeek  = () =>{
-    return axiosInstance.get("/admin/income/week")
-}
-export const getIncomeByMonth = () =>{
-    return axiosInstance.get("/admin/income/month")
 
+export const getTransactionsByWeek=()=>{
+    return axiosInstance.get("/admin/transactions/week")
 }
-export const getIncomeByYear = ()=>{
-    return axiosInstance.get("/admin/income/year")
+export const getTransactionsByMonth=()=>{
+    return axiosInstance.get("/admin/transactions/month")
 }
-export const getExpenseByCategory = () =>{
-    return axiosInstance.get("/admin/expense/category")
+export const getTransactionsByYear=()=>{
+    return axiosInstance.get("/admin/transactions/year")
 }
-export const getExpenseByWeek = () =>{
-    return axiosInstance.get("/admin/expense/week")
+export const getTransactionsByWeekRaw=()=>{
+    return axiosInstance.get("/admin/transactions/weekly")
 }
-export const getExpenseByMonth = ()=>{
-    return axiosInstance.get("/admin/expense/month")
+export const getTransactionsByMonthRaw=()=>{
+    return axiosInstance.get("/admin/transactions/monthly")
 }
-export const getExpenseByYear=()=>{
-    return axiosInstance.get("/admin/expense/year")
-}
+
