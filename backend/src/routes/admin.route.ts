@@ -15,14 +15,11 @@ import {
 
 import {
    addTransaction,
-  incomeByCategory,
-  incomeByMonth,
-  incomeByWeek,
-  incomeByYear,
-  expenseByCategory,
-  expenseByMonth,
-  expenseByWeek,
-  expenseByYear,
+  transactionsByMonth,
+  transactionsByMonthRaw,
+  transactionsByWeek,
+  transactionsByWeekRaw,
+  transactionsByYear,
 } from "../controllers/expenseController/expense.controller";
 import { createFeeStructure } from "../controllers/feeControllers/fee.controller";
 import { payStudentFee } from "../controllers/feeControllers/pay-fee.controller";
@@ -45,13 +42,11 @@ adminRoutes.get("/staff", getStaff);
 adminRoutes.get("/staff/:email", staffByname);
 adminRoutes.put("/staff/:email", updateStaff);
 // Expense tracker
-adminRoutes.post("/expenses", addTransaction);
-adminRoutes.get("/income/category", incomeByCategory);
-adminRoutes.get("/income/week", incomeByWeek);
-adminRoutes.get("/income/month", incomeByMonth);
-adminRoutes.get("/expense/category", expenseByCategory);
-adminRoutes.get("/expense/week", expenseByWeek);
-adminRoutes.get("/expense/month", expenseByMonth);
-adminRoutes.get("/expense/year",expenseByYear);
-adminRoutes.get("/income/year",incomeByYear)
+adminRoutes.post("/add", addTransaction);
+adminRoutes.get("/transactions/week", transactionsByWeek);
+adminRoutes.get("/transactions/month", transactionsByMonth);
+adminRoutes.get("/transactions/year", transactionsByYear);
+adminRoutes.get("/transactions/weekly",transactionsByWeekRaw);
+adminRoutes.get("/transactions/monthly",transactionsByMonthRaw);
+
 export default adminRoutes;
